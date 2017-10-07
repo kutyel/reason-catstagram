@@ -1,0 +1,18 @@
+####{BSB GENERATED: NO EDIT
+FLG -ppx '/usr/local/lib/node_modules/bs-platform/bin/reactjs_jsx_ppx_2.exe'
+FLG -ppx /usr/local/lib/node_modules/bs-platform/bin/bsppx.exe
+S /Users/kutyel/Documents/Dev/reason-catstagram/node_modules/bs-platform/lib/ocaml
+B /Users/kutyel/Documents/Dev/reason-catstagram/node_modules/bs-platform/lib/ocaml
+FLG -nostdlib -no-alias-deps -color always
+FLG -w -40+6+7+27+32..39+44+45
+S /Users/kutyel/Documents/Dev/reason-catstagram/node_modules/reason-react/lib/ocaml
+B /Users/kutyel/Documents/Dev/reason-catstagram/node_modules/reason-react/lib/ocaml
+S /Users/kutyel/Documents/Dev/reason-catstagram/node_modules/bs-jest/lib/ocaml
+B /Users/kutyel/Documents/Dev/reason-catstagram/node_modules/bs-jest/lib/ocaml
+S src
+B lib/bs/src
+S src/styles
+B lib/bs/src/styles
+S src/components
+B lib/bs/src/components
+####BSB GENERATED: NO EDIT}
