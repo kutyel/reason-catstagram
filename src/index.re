@@ -3,10 +3,7 @@
 /* [@bs.module "./registerServiceWorker"] */
 /* external register_service_worker : unit => unit = "default"; */
 
-ReactDOMRe.renderToElementWithId(
-  <App message="Welcome to Reason Catstagram!" />,
-  "root",
-);
+ReactDOMRe.renderToElementWithId(<App />, "root");
 
 Js.log("hello world");
 

@@ -2,84 +2,61 @@
 
 [@bs.module] external logo: string = "./logo.svg";
 
-type state = {gifUrl: option(string)};
+open Types;
+
+type state = {
+  posts: list(post),
+  activeRoute: route,
+};
 
 type action =
   | FetchCats
-  | SaveCatsUrl(option(string));
-
-let parseGiphyResponse = json =>
-  switch (Js.Json.decodeObject(json)) {
-  | Some(jsDict) =>
-    switch (Js.Dict.get(jsDict, "data")) {
-    | Some(data) =>
-      switch (Js.Json.decodeObject(data)) {
-      | Some(dataDict) =>
-        switch (Js.Dict.get(dataDict, "image_url")) {
-        | Some(jsonUrl) => Js.Json.decodeString(jsonUrl)
-        | None => None
-        }
-      | None => None
-      }
-    | None => None
-    }
-  | None => None
-  };
-
-let fetchCats = cb =>
-  Fetch.fetch(
-    "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=cats",
-  )
-  |> Repromise.andThen(Fetch.json)
-  |> Repromise.wait(json => {
-       let catsUrl = parseGiphyResponse(json);
-       cb(catsUrl);
-     });
+  | ChangeRoute(route);
 
 let component = ReasonReact.reducerComponent("App");
 
-let make = (~message, _children) => {
+let make = _children => {
   ...component,
-  initialState: () => {gifUrl: None},
-  reducer: (action, _state) =>
-    switch (action) {
-    | FetchCats =>
-      ReasonReact.SideEffects(
-        (self => fetchCats(newCatUrl => self.send(SaveCatsUrl(newCatUrl)))),
-      )
-
-    | SaveCatsUrl(newCatsUrl) => ReasonReact.Update({gifUrl: newCatsUrl})
-    },
-  render: self =>
-    <div className="App">
-      <div className="App-header">
-        <img src=logo className="App-logo" alt="logo" />
-        <h2> {ReasonReact.string(message)} </h2>
-      </div>
-      <p className="App-intro">
-        {ReasonReact.string("To get started, edit")}
-        <code> {ReasonReact.string(" src/app.re ")} </code>
-        {ReasonReact.string("and save to reload.")}
-        <Link text="ReasonML" link=Hashtag />
-      </p>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <p>
-        <button onClick={_ => self.send(FetchCats)}>
-          {ReasonReact.string({js|Necesito más gatos!|js})}
-        </button>
-      </p>
-      <p>
-        {
-          switch (self.state.gifUrl) {
-          | Some(url) => <img src=url />
-          | None => ReasonReact.string("Faltan gatos en este momento.")
-          }
+  initialState: () => {
+    posts: [
+      {
+        id: "1",
+        count: Some(0),
+        image: "https://instagram.falc2-2.fna.fbcdn.net/vp/144b6ac07f994a13a7f85fda32f9b8d5/5C160DBC/t51.2885-15/e35/33630499_1741098989349139_7374174821044715520_n.jpg",
+        description: "cat",
+      },
+    ],
+    activeRoute: Detail("hello"),
+  },
+  didMount: self => {
+    let watcherID =
+      ReasonReact.Router.watchUrl(url =>
+        switch (url.path) {
+        | ["view", postId] => self.send(ChangeRoute(Detail(postId)))
+        | _ => self.send(ChangeRoute(Default))
         }
-      </p>
-    </div>,
+      );
+    self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
+  },
+  reducer: (action, state) =>
+    switch (action) {
+    | ChangeRoute(activeRoute) =>
+      ReasonReact.Update({...state, activeRoute})
+    | FetchCats => ReasonReact.NoUpdate
+    },
+  render: ({state: {posts, activeRoute}}) => {
+    let posts =
+      posts
+      ->Belt.List.map(post => <Post post />)
+      ->Belt.List.toArray
+      ->ReasonReact.array;
+    <div className="App">
+      {
+        switch (activeRoute) {
+        | Default => posts
+        | Detail(route) => ReasonReact.string("route:" ++ route)
+        }
+      }
+    </div>;
+  },
 };
