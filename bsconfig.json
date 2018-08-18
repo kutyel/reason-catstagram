@@ -1,8 +1,13 @@
 {
-  "name": "reason-scripts",
-  "sources": [{ "dir": "src", "subdirs": true }],
-  "bs-dependencies": ["reason-react", "bs-jest"],
+  "name": "Catstagram",
+  "sources": [{ "dir": "src"  }],
+  "bs-dependencies": ["reason-react", "@aantron/repromise"],
   "reason": { "react-jsx": 2 },
   "bsc-flags": ["-bs-super-errors"],
-  "refmt": 3
+  "refmt": 3,
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
+  },
+  "suffix": ".bs.js"
 }
