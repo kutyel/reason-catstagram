@@ -3,19 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "reason-scripts": "^0.9.0"
+    "@aantron/repromise": "^0.6.0",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "reason-react": "^0.5.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "prepare": "npm link bs-platform"
+    "bsb": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
+    "bundle": "parcel ./index.html"
   },
   "devDependencies": {
-    "bs-jest": "^0.2.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "reason-react": "^0.3.1"
+    "bs-platform": "^4.0.5",
+    "parcel-bundler": "^1.9.7"
   }
 }

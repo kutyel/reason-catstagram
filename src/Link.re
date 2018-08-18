@@ -10,13 +10,13 @@ let make = (~text, ~link, _children) => {
     switch link {
     | Mention =>
       <a target="blank" href=("https://www.instagram.com/" ++ text)>
-        (ReasonReact.stringToElement("@" ++ text))
+        (ReasonReact.string("@" ++ text))
       </a>
     | Hashtag =>
       <a
         target="blank"
         href=("https://www.instagram.com/explore/tags/" ++ text)>
-        (ReasonReact.stringToElement("#" ++ text))
+        (ReasonReact.string("#" ++ text))
       </a>
     }
 };
