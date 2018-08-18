@@ -9,6 +9,4 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 ReactDOMRe.renderToElementWithId(ReasonReact.element(undefined, undefined, App.make(/* array */[])), "root");
 
-console.log("hello world");
-
 /*  Not a pure module */

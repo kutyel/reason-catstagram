@@ -1,24 +1,28 @@
 # reason-catstagram
 
-## dev tools (Vscode)
+My very first ReasonReact app, of course, about cats! 🐈
+
+## DevTools (vscode)
 
 - Remove all prior reason plugins
 - Download https://github.com/jaredly/reason-language-server/releases
-- In the vscode extensions panel, open the menu and click "install from .vsix".
+- In the vscode extensions panel, open the menu and click "Install from VSIX...".
 
-## install
+## Install
 
+```sh
+npm i
 ```
-yarn
-```
 
-## development
+## Development
 
-```
+```sh
 # run the bsb compiler
-yarn bsb
-# in another tab
-yarn bundle
+npm run bsb
 
-# open localhost:1234
+# in another tab
+npm run bundle
+
+# and finally...
+open localhost:1234
 ```

@@ -1,7 +1,3 @@
-[%bs.raw {|require('./app.css')|}];
-
-[@bs.module] external logo: string = "./logo.svg";
-
 open Types;
 
 type state = {
@@ -32,11 +28,7 @@ let make = _children => {
         description: "cat",
       },
     ],
-    activeRoute: {
-      /* See https://reasonml.github.io/reason-react/docs/en/router#directly-get-a-route */
-      let url = ReasonReact.Router.dangerouslyGetInitialUrl();
-      urlToRoute(url);
-    },
+    activeRoute: urlToRoute(ReasonReact.Router.dangerouslyGetInitialUrl()),
   },
   didMount: self => {
     let watcherID =

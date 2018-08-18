@@ -8,8 +8,6 @@ var React = require("react");
 var Belt_List = require("bs-platform/lib/js/belt_List.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
 
-((require('./app.css')));
-
 var component = ReasonReact.reducerComponent("App");
 
 function urlToRoute(url) {
@@ -86,4 +84,4 @@ function make() {
 exports.component = component;
 exports.urlToRoute = urlToRoute;
 exports.make = make;
-/*  Not a pure module */
+/* component Not a pure module */
