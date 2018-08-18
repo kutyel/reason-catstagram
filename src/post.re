@@ -8,8 +8,8 @@ let make = (~post, _children) => {
     let {id, image, count, description} = post;
     let count =
       switch (count) {
-      | None => 0
-      | Some(num) => num
+      | None => "0"
+      | Some(num) => string_of_int(num)
       };
     <figure className="grid-figure">
       <div className="grid-photo-wrap">
@@ -21,12 +21,12 @@ let make = (~post, _children) => {
         <p> {ReasonReact.string(description)} </p>
         <div className="control-buttons">
           <button className="liked">
-            {ReasonReact.string("&hearts; " ++ string_of_int(count))}
+            {ReasonReact.string("&hearts; " ++ count)}
           </button>
           <a className="button" href={j|/view/$id|j}>
             <span className="comment-count">
               <span className="speech-bubble" />
-              {ReasonReact.string(string_of_int(count))}
+              {ReasonReact.string(count)}
             </span>
           </a>
         </div>

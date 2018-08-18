@@ -20,7 +20,7 @@ function make(post, _) {
           /* render */(function () {
               var count = post[/* count */2];
               var id = post[/* id */0];
-              var count$1 = count !== undefined ? count : 0;
+              var count$1 = count !== undefined ? String(count) : "0";
               return React.createElement("figure", {
                           className: "grid-figure"
                         }, React.createElement("div", {
@@ -35,14 +35,14 @@ function make(post, _) {
                                   className: "control-buttons"
                                 }, React.createElement("button", {
                                       className: "liked"
-                                    }, "&hearts; " + String(count$1)), React.createElement("a", {
+                                    }, "&hearts; " + count$1), React.createElement("a", {
                                       className: "button",
                                       href: "/view/" + (String(id) + "")
                                     }, React.createElement("span", {
                                           className: "comment-count"
                                         }, React.createElement("span", {
                                               className: "speech-bubble"
-                                            }), String(count$1))))));
+                                            }), count$1)))));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
