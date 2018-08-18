@@ -12,6 +12,20 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.reducerComponent("App");
 
+function urlToRoute(url) {
+  var match = url[/* path */0];
+  if (match && match[0] === "view") {
+    var match$1 = match[1];
+    if (match$1 && !match$1[1]) {
+      return /* Detail */[match$1[0]];
+    } else {
+      return /* Default */0;
+    }
+  } else {
+    return /* Default */0;
+  }
+}
+
 function make() {
   return /* record */[
           /* debugName */component[/* debugName */0],
@@ -20,17 +34,7 @@ function make() {
           /* willReceiveProps */component[/* willReceiveProps */3],
           /* didMount */(function (self) {
               var watcherID = ReasonReact.Router[/* watchUrl */1]((function (url) {
-                      var match = url[/* path */0];
-                      if (match && match[0] === "view") {
-                        var match$1 = match[1];
-                        if (match$1 && !match$1[1]) {
-                          return Curry._1(self[/* send */3], /* ChangeRoute */[/* Detail */[match$1[0]]]);
-                        } else {
-                          return Curry._1(self[/* send */3], /* ChangeRoute */[/* Default */0]);
-                        }
-                      } else {
-                        return Curry._1(self[/* send */3], /* ChangeRoute */[/* Default */0]);
-                      }
+                      return Curry._1(self[/* send */3], /* ChangeRoute */[urlToRoute(url)]);
                     }));
               return Curry._1(self[/* onUnmount */4], (function () {
                             return ReasonReact.Router[/* unwatchUrl */2](watcherID);
@@ -61,7 +65,7 @@ function make() {
                         ],
                         /* [] */0
                       ],
-                      /* activeRoute : Detail */["hello"]
+                      /* activeRoute */urlToRoute(ReasonReact.Router[/* dangerouslyGetInitialUrl */3](/* () */0))
                     ];
             }),
           /* retainedProps */component[/* retainedProps */11],
@@ -80,5 +84,6 @@ function make() {
 }
 
 exports.component = component;
+exports.urlToRoute = urlToRoute;
 exports.make = make;
 /*  Not a pure module */

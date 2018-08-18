@@ -15,6 +15,12 @@ type action =
 
 let component = ReasonReact.reducerComponent("App");
 
+let urlToRoute = url =>
+  switch (ReasonReact.Router.(url.path)) {
+  | ["view", postId] => Detail(postId)
+  | _ => Default
+  };
+
 let make = _children => {
   ...component,
   initialState: () => {
@@ -26,15 +32,16 @@ let make = _children => {
         description: "cat",
       },
     ],
-    activeRoute: Detail("hello"),
+    activeRoute: {
+      /* See https://reasonml.github.io/reason-react/docs/en/router#directly-get-a-route */
+      let url = ReasonReact.Router.dangerouslyGetInitialUrl();
+      urlToRoute(url);
+    },
   },
   didMount: self => {
     let watcherID =
       ReasonReact.Router.watchUrl(url =>
-        switch (url.path) {
-        | ["view", postId] => self.send(ChangeRoute(Detail(postId)))
-        | _ => self.send(ChangeRoute(Default))
-        }
+        self.send(ChangeRoute(urlToRoute(url)))
       );
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
   },
