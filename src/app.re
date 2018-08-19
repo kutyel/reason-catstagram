@@ -43,19 +43,14 @@ let make = _children => {
       ReasonReact.Update({...state, activeRoute})
     | FetchCats => ReasonReact.NoUpdate
     },
-  render: ({state: {posts, activeRoute}}) => {
-    let posts =
-      posts
-      ->Belt.List.map(post => <Post post />)
-      ->Belt.List.toArray
-      ->ReasonReact.array;
-    <div className="App">
+  render: ({state: {posts, activeRoute}}) =>
+    <div>
+      <h1> <a href="/"> {ReasonReact.string("Catstagram")} </a> </h1>
       {
         switch (activeRoute) {
-        | Default => posts
-        | Detail(route) => ReasonReact.string("route:" ++ route)
+        | Default => <Grid posts />
+        | Detail(postId) => <Single posts postId />
         }
       }
-    </div>;
-  },
+    </div>,
 };

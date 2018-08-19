@@ -7,16 +7,16 @@ type link =
 let make = (~text, ~link, _children) => {
   ...component,
   render: _self =>
-    switch link {
+    switch (link) {
     | Mention =>
-      <a target="blank" href=("https://www.instagram.com/" ++ text)>
-        (ReasonReact.string("@" ++ text))
+      <a target="blank" href={"https://www.instagram.com/" ++ text}>
+        {ReasonReact.string("@" ++ text)}
       </a>
     | Hashtag =>
       <a
         target="blank"
-        href=("https://www.instagram.com/explore/tags/" ++ text)>
-        (ReasonReact.string("#" ++ text))
+        href={"https://www.instagram.com/explore/tags/" ++ text}>
+        {ReasonReact.string("#" ++ text)}
       </a>
-    }
+    },
 };
