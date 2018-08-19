@@ -6,7 +6,7 @@ open Types;
 let make = (~posts, ~postId, _children) => {
   ...component,
   render: _self => {
-    let post = List.getBy(posts, post => post.id == postId);
+    let post = posts->List.getBy(post => post.id == postId);
     <div className="single-photo">
       {
         switch (post) {
