@@ -23,7 +23,7 @@ function make(posts, _) {
               return React.createElement("div", {
                           className: "photo-grid"
                         }, Belt_List.toArray(Belt_List.map(posts, (function (post) {
-                                    return ReasonReact.element(undefined, undefined, Post.make(post, /* array */[]));
+                                    return ReasonReact.element(post[/* id */0], undefined, Post.make(post, /* array */[]));
                                   }))));
             }),
           /* initialState */component[/* initialState */10],

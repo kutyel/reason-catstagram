@@ -1,3 +1,5 @@
+[@bs.val] external token: string = "process.env.API_TOKEN";
+
 open Types;
 
 type state = {
