@@ -5,6 +5,11 @@ type post = {
   description: string,
 };
 
+type load =
+  | Loading
+  | Error
+  | Loaded(list(post));
+
 type route =
   | Default
   | Detail(string);

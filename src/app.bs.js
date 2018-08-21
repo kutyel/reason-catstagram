@@ -2,13 +2,21 @@
 'use strict';
 
 var Grid = require("./grid.bs.js");
+var List = require("bs-platform/lib/js/list.js");
 var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var Single = require("./single.bs.js");
+var Json_decode = require("@glennsl/bs-json/src/Json_decode.bs.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.reducerComponent("App");
+
+function identity(x) {
+  return x;
+}
+
+var token = (process.env.API_TOKEN);
 
 function urlToRoute(url) {
   var match = url[/* path */0];
@@ -24,6 +32,14 @@ function urlToRoute(url) {
   }
 }
 
+function posts(json) {
+  return List.map(identity, Json_decode.field("data", (function (param) {
+                    return Json_decode.list(Json_decode.string, param);
+                  }), json));
+}
+
+var Decode = /* module */[/* posts */posts];
+
 function make() {
   return /* record */[
           /* debugName */component[/* debugName */0],
@@ -31,11 +47,11 @@ function make() {
           /* handedOffState */component[/* handedOffState */2],
           /* willReceiveProps */component[/* willReceiveProps */3],
           /* didMount */(function (self) {
-              var watcherID = ReasonReact.Router[/* watchUrl */1]((function (url) {
-                      return Curry._1(self[/* send */3], /* ChangeRoute */[urlToRoute(url)]);
+              var watcher = ReasonReact.Router[/* watchUrl */1]((function (url) {
+                      return Curry._1(self[/* send */3], /* ChangeRoute */Block.__(1, [urlToRoute(url)]));
                     }));
               return Curry._1(self[/* onUnmount */4], (function () {
-                            return ReasonReact.Router[/* unwatchUrl */2](watcherID);
+                            return ReasonReact.Router[/* unwatchUrl */2](watcher);
                           }));
             }),
           /* didUpdate */component[/* didUpdate */5],
@@ -45,34 +61,60 @@ function make() {
           /* render */(function (param) {
               var match = param[/* state */1];
               var activeRoute = match[/* activeRoute */1];
-              var posts = match[/* posts */0];
+              var load = match[/* load */0];
+              var tmp;
+              if (typeof load === "number") {
+                tmp = load !== 0 ? React.createElement("div", undefined, "An error occurred! :(") : React.createElement("div", undefined, "Loading...");
+              } else {
+                var posts = load[0];
+                tmp = activeRoute ? ReasonReact.element(undefined, undefined, Single.make(posts, activeRoute[0], /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, /* array */[]));
+              }
               return React.createElement("div", undefined, React.createElement("h1", undefined, React.createElement("a", {
                                   href: "/"
-                                }, "Catstagram")), activeRoute ? ReasonReact.element(undefined, undefined, Single.make(posts, activeRoute[0], /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, /* array */[])));
+                                }, "Catstagram")), tmp);
             }),
           /* initialState */(function () {
               return /* record */[
-                      /* posts : :: */[
-                        /* record */[
-                          /* id */"1",
-                          /* image */"https://instagram.falc2-2.fna.fbcdn.net/vp/144b6ac07f994a13a7f85fda32f9b8d5/5C160DBC/t51.2885-15/e35/33630499_1741098989349139_7374174821044715520_n.jpg",
-                          /* count */0,
-                          /* description */"cat"
-                        ],
-                        /* [] */0
-                      ],
+                      /* load : Loading */0,
                       /* activeRoute */urlToRoute(ReasonReact.Router[/* dangerouslyGetInitialUrl */3](/* () */0))
                     ];
             }),
           /* retainedProps */component[/* retainedProps */11],
           /* reducer */(function (action, state) {
-              if (action) {
+              if (typeof action === "number") {
+                if (action === 0) {
+                  return /* UpdateWithSideEffects */Block.__(2, [
+                            /* record */[
+                              /* load : Loading */0,
+                              /* activeRoute */state[/* activeRoute */1]
+                            ],
+                            (function (self) {
+                                fetch("https://api.instagram.com/v1/users/self/media/recent/?access_token=" + token).then((function (prim) {
+                                            return prim.json();
+                                          })).then((function (json) {
+                                          return Promise.resolve((console.log(json), /* () */0));
+                                        })).catch((function () {
+                                        return Promise.resolve(Curry._1(self[/* send */3], /* CatsFailedToFetch */1));
+                                      }));
+                                return /* () */0;
+                              })
+                          ]);
+                } else {
+                  return /* Update */Block.__(0, [/* record */[
+                              /* load : Error */1,
+                              /* activeRoute */state[/* activeRoute */1]
+                            ]]);
+                }
+              } else if (action.tag) {
                 return /* Update */Block.__(0, [/* record */[
-                            /* posts */state[/* posts */0],
+                            /* load */state[/* load */0],
                             /* activeRoute */action[0]
                           ]]);
               } else {
-                return /* NoUpdate */0;
+                return /* Update */Block.__(0, [/* record */[
+                            /* load : Loaded */[action[0]],
+                            /* activeRoute */state[/* activeRoute */1]
+                          ]]);
               }
             }),
           /* jsElementWrapped */component[/* jsElementWrapped */13]
@@ -80,6 +122,9 @@ function make() {
 }
 
 exports.component = component;
+exports.identity = identity;
+exports.token = token;
 exports.urlToRoute = urlToRoute;
+exports.Decode = Decode;
 exports.make = make;
 /* component Not a pure module */

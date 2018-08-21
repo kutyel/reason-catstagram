@@ -1,57 +1,89 @@
-[@bs.val] external token: string = "process.env.API_TOKEN";
-
 open Types;
 
 type state = {
-  posts: list(post),
+  load,
   activeRoute: route,
 };
 
 type action =
-  | FetchCats
+  | CatsFetch
+  | CatsFailedToFetch
+  | CatsFetched(list(post))
   | ChangeRoute(route);
 
 let component = ReasonReact.reducerComponent("App");
 
+let identity = x => x;
+let token = [%raw "process.env.API_TOKEN"];
 let urlToRoute = url =>
   switch (ReasonReact.Router.(url.path)) {
   | ["view", postId] => Detail(postId)
   | _ => Default
   };
 
+module Decode = {
+  let posts = json: list(string) =>
+    Json.Decode.(
+      json |> field("data", list(string)) |> List.map(identity)
+    );
+};
+
 let make = _children => {
   ...component,
   initialState: () => {
-    posts: [
-      {
-        id: "1",
-        count: Some(0),
-        image: "https://instagram.falc2-2.fna.fbcdn.net/vp/144b6ac07f994a13a7f85fda32f9b8d5/5C160DBC/t51.2885-15/e35/33630499_1741098989349139_7374174821044715520_n.jpg",
-        description: "cat",
-      },
-    ],
+    load: Loading,
     activeRoute: urlToRoute(ReasonReact.Router.dangerouslyGetInitialUrl()),
   },
   didMount: self => {
-    let watcherID =
+    let watcher =
       ReasonReact.Router.watchUrl(url =>
         self.send(ChangeRoute(urlToRoute(url)))
       );
-    self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
+    self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcher));
   },
   reducer: (action, state) =>
     switch (action) {
+    | CatsFetch =>
+      ReasonReact.UpdateWithSideEffects(
+        {...state, load: Loading},
+        (
+          self =>
+            Js.Promise.(
+              Fetch.fetch(
+                "https://api.instagram.com/v1/users/self/media/recent/?access_token="
+                ++ token,
+              )
+              |> then_(Fetch.Response.json)
+              |> then_(json =>
+                   json
+                   |> Js.log
+                   /* |> TODO: Decode.posts */
+                   /* |> (cats => self.send(CatsFetched(cats))) */
+                   |> resolve
+                 )
+              |> catch(_err =>
+                   Js.Promise.resolve(self.send(CatsFailedToFetch))
+                 )
+              |> ignore
+            )
+        ),
+      )
+    | CatsFailedToFetch => ReasonReact.Update({...state, load: Error})
+    | CatsFetched(cats) =>
+      ReasonReact.Update({...state, load: Loaded(cats)})
     | ChangeRoute(activeRoute) =>
       ReasonReact.Update({...state, activeRoute})
-    | FetchCats => ReasonReact.NoUpdate
     },
-  render: ({state: {posts, activeRoute}}) =>
+  render: ({state: {load, activeRoute}}) =>
     <div>
       <h1> <a href="/"> {ReasonReact.string("Catstagram")} </a> </h1>
       {
-        switch (activeRoute) {
-        | Default => <Grid posts />
-        | Detail(postId) => <Single posts postId />
+        switch (load, activeRoute) {
+        | (Error, _) =>
+          <div> {ReasonReact.string("An error occurred! :(")} </div>
+        | (Loading, _) => <div> {ReasonReact.string("Loading...")} </div>
+        | (Loaded(posts), Default) => <Grid posts />
+        | (Loaded(posts), Detail(postId)) => <Single posts postId />
         }
       }
     </div>,

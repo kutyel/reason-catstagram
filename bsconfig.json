@@ -1,7 +1,7 @@
 {
   "name": "Catstagram",
-  "sources": [{ "dir": "src"  }],
-  "bs-dependencies": ["reason-react", "@aantron/repromise"],
+  "sources": [{ "dir": "src" }],
+  "bs-dependencies": ["reason-react", "bs-fetch", "@glennsl/bs-json"],
   "reason": { "react-jsx": 2 },
   "bsc-flags": ["-bs-super-errors"],
   "refmt": 3,
