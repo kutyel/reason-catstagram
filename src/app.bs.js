@@ -2,19 +2,14 @@
 'use strict';
 
 var Grid = require("./grid.bs.js");
-var List = require("bs-platform/lib/js/list.js");
 var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
+var Decode = require("./Decode.bs.js");
 var Single = require("./single.bs.js");
-var Json_decode = require("@glennsl/bs-json/src/Json_decode.bs.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.reducerComponent("App");
-
-function identity(x) {
-  return x;
-}
 
 var token = (process.env.API_TOKEN);
 
@@ -32,14 +27,6 @@ function urlToRoute(url) {
   }
 }
 
-function posts(json) {
-  return List.map(identity, Json_decode.field("data", (function (param) {
-                    return Json_decode.list(Json_decode.string, param);
-                  }), json));
-}
-
-var Decode = /* module */[/* posts */posts];
-
 function make() {
   return /* record */[
           /* debugName */component[/* debugName */0],
@@ -50,6 +37,7 @@ function make() {
               var watcher = ReasonReact.Router[/* watchUrl */1]((function (url) {
                       return Curry._1(self[/* send */3], /* ChangeRoute */Block.__(1, [urlToRoute(url)]));
                     }));
+              Curry._1(self[/* send */3], /* CatsFetch */0);
               return Curry._1(self[/* onUnmount */4], (function () {
                             return ReasonReact.Router[/* unwatchUrl */2](watcher);
                           }));
@@ -92,7 +80,8 @@ function make() {
                                 fetch("https://api.instagram.com/v1/users/self/media/recent/?access_token=" + token).then((function (prim) {
                                             return prim.json();
                                           })).then((function (json) {
-                                          return Promise.resolve((console.log(json), /* () */0));
+                                          var cats = Decode.Decode[/* posts */6](json);
+                                          return Promise.resolve(Curry._1(self[/* send */3], /* CatsFetched */Block.__(0, [cats])));
                                         })).catch((function () {
                                         return Promise.resolve(Curry._1(self[/* send */3], /* CatsFailedToFetch */1));
                                       }));
@@ -122,9 +111,7 @@ function make() {
 }
 
 exports.component = component;
-exports.identity = identity;
 exports.token = token;
 exports.urlToRoute = urlToRoute;
-exports.Decode = Decode;
 exports.make = make;
 /* component Not a pure module */

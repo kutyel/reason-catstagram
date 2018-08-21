@@ -26,3 +26,12 @@ npm run bundle
 # and finally...
 open localhost:1234
 ```
+
+## Usage
+
+You need to get your own Instagram API_TOKEN and add a `.env` file:
+
+```sh
+# .env
+API_TOKEN=xxxxxxxxxx.xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```

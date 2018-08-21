@@ -1,4 +1,5 @@
 open Types;
+open Decode;
 
 type state = {
   load,
@@ -13,20 +14,12 @@ type action =
 
 let component = ReasonReact.reducerComponent("App");
 
-let identity = x => x;
 let token = [%raw "process.env.API_TOKEN"];
 let urlToRoute = url =>
   switch (ReasonReact.Router.(url.path)) {
   | ["view", postId] => Detail(postId)
   | _ => Default
   };
-
-module Decode = {
-  let posts = json: list(string) =>
-    Json.Decode.(
-      json |> field("data", list(string)) |> List.map(identity)
-    );
-};
 
 let make = _children => {
   ...component,
@@ -39,6 +32,7 @@ let make = _children => {
       ReasonReact.Router.watchUrl(url =>
         self.send(ChangeRoute(urlToRoute(url)))
       );
+    self.send(CatsFetch);
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcher));
   },
   reducer: (action, state) =>
@@ -56,9 +50,8 @@ let make = _children => {
               |> then_(Fetch.Response.json)
               |> then_(json =>
                    json
-                   |> Js.log
-                   /* |> TODO: Decode.posts */
-                   /* |> (cats => self.send(CatsFetched(cats))) */
+                   |> Decode.posts
+                   |> (cats => self.send(CatsFetched(cats)))
                    |> resolve
                  )
               |> catch(_err =>
@@ -71,8 +64,7 @@ let make = _children => {
     | CatsFailedToFetch => ReasonReact.Update({...state, load: Error})
     | CatsFetched(cats) =>
       ReasonReact.Update({...state, load: Loaded(cats)})
-    | ChangeRoute(activeRoute) =>
-      ReasonReact.Update({...state, activeRoute})
+    | ChangeRoute(activeRoute) => ReasonReact.Update({...state, activeRoute})
     },
   render: ({state: {load, activeRoute}}) =>
     <div>

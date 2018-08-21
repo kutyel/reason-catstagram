@@ -18,9 +18,8 @@ function make(post, _) {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function () {
-              var count = post[/* count */2];
+              var count = post[/* likes */3][/* count */0];
               var id = post[/* id */0];
-              var count$1 = count !== undefined ? String(count) : "0";
               return React.createElement("figure", {
                           className: "grid-figure"
                         }, React.createElement("div", {
@@ -30,19 +29,19 @@ function make(post, _) {
                                 }, React.createElement("img", {
                                       className: "grid-photo",
                                       alt: id,
-                                      src: post[/* image */1]
-                                    }))), React.createElement("figcaption", undefined, React.createElement("p", undefined, post[/* description */3]), React.createElement("div", {
+                                      src: post[/* images */2][/* standard_resolution */0][/* url */0]
+                                    }))), React.createElement("figcaption", undefined, React.createElement("p", undefined, post[/* caption */1][/* text */0]), React.createElement("div", {
                                   className: "control-buttons"
                                 }, React.createElement("button", {
                                       className: "liked"
-                                    }, "&hearts; " + count$1), React.createElement("a", {
+                                    }, "&hearts; " + String(count)), React.createElement("a", {
                                       className: "button",
                                       href: "/view/" + (String(id) + "")
                                     }, React.createElement("span", {
                                           className: "comment-count"
                                         }, React.createElement("span", {
                                               className: "speech-bubble"
-                                            }), count$1)))));
+                                            }), String(count))))));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],

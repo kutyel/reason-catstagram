@@ -20,8 +20,8 @@ function make(posts, postId, _) {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function () {
-              var post = Belt_List.getBy(posts, (function (post) {
-                      return post[/* id */0] === postId;
+              var post = Belt_List.getBy(posts, (function (p) {
+                      return p[/* id */0] === postId;
                     }));
               return React.createElement("div", {
                           className: "single-photo"
