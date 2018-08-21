@@ -15,7 +15,5 @@ module Decode = {
       images: json |> field("images", images),
       likes: json |> field("likes", likes),
     };
-
-  let posts = json: list(post) =>
-    Json.Decode.(json |> field("data", list(post)));
+  let posts = json => Json.Decode.(json |> field("data", list(post)));
 };
