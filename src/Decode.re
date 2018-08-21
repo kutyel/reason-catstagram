@@ -1,7 +1,6 @@
 open Types;
 
 module Decode = {
-  let identity = x => x;
   let caption = json => Json.Decode.{text: json |> field("text", string)};
   let resolution = json => Json.Decode.{url: json |> field("url", string)};
   let likes = json => Json.Decode.{count: json |> field("count", int)};
@@ -18,5 +17,5 @@ module Decode = {
     };
 
   let posts = json: list(post) =>
-    Json.Decode.(json |> field("data", list(post)) |> List.map(identity));
+    Json.Decode.(json |> field("data", list(post)));
 };

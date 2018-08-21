@@ -3,10 +3,10 @@ let component = ReasonReact.statelessComponent("Single");
 open Belt;
 open Types;
 
-let make = (~posts: list(post), ~postId, _children) => {
+let make = (~posts, ~postId, _children) => {
   ...component,
   render: _self => {
-    let post = posts->List.getBy(p => p.id == postId);
+    let post = posts->List.getBy(({id}) => id == postId);
     <div className="single-photo">
       {
         switch (post) {
