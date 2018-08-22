@@ -58,9 +58,7 @@ function make() {
                 var posts = load[0];
                 tmp = activeRoute ? ReasonReact.element(undefined, undefined, Single.make(posts, activeRoute[0], /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, /* array */[]));
               }
-              return React.createElement("div", {
-                          className: "App"
-                        }, React.createElement("h1", undefined, React.createElement("a", {
+              return React.createElement("div", undefined, React.createElement("h1", undefined, React.createElement("a", {
                                   href: "/"
                                 }, "Catstagram")), tmp);
             }),

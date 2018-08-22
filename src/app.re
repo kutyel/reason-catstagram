@@ -64,7 +64,7 @@ let make = _children => {
     | ChangeRoute(activeRoute) => ReasonReact.Update({...state, activeRoute})
     },
   render: ({state: {load, activeRoute}}) =>
-    <div className="App">
+    <div>
       <h1> <a href="/"> {ReasonReact.string("Catstagram")} </a> </h1>
       {
         switch (load, activeRoute) {
