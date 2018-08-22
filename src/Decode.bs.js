@@ -11,7 +11,7 @@ function resolution(json) {
   return /* record */[/* url */Json_decode.field("url", Json_decode.string, json)];
 }
 
-function likes(json) {
+function num(json) {
   return /* record */[/* count */Json_decode.field("count", Json_decode.$$int, json)];
 }
 
@@ -24,7 +24,8 @@ function post(json) {
           /* id */Json_decode.field("id", Json_decode.string, json),
           /* caption */Json_decode.field("caption", caption, json),
           /* images */Json_decode.field("images", images, json),
-          /* likes */Json_decode.field("likes", likes, json),
+          /* likes */Json_decode.field("likes", num, json),
+          /* comments */Json_decode.field("comments", num, json),
           /* user_has_liked */Json_decode.field("user_has_liked", Json_decode.bool, json)
         ];
 }
@@ -37,7 +38,7 @@ function posts(json) {
 
 exports.caption = caption;
 exports.resolution = resolution;
-exports.likes = likes;
+exports.num = num;
 exports.images = images;
 exports.post = post;
 exports.posts = posts;

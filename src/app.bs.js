@@ -7,6 +7,7 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var Decode = require("./Decode.bs.js");
 var Single = require("./single.bs.js");
+var Spinner = require("./spinner.bs.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.reducerComponent("App");
@@ -52,12 +53,14 @@ function make() {
               var load = match[/* load */0];
               var tmp;
               if (typeof load === "number") {
-                tmp = load !== 0 ? React.createElement("div", undefined, "An error occurred! :(") : React.createElement("div", undefined, "Loading...");
+                tmp = load !== 0 ? React.createElement("div", undefined, "An error occurred! :(") : ReasonReact.element(undefined, undefined, Spinner.make(/* array */[]));
               } else {
                 var posts = load[0];
                 tmp = activeRoute ? ReasonReact.element(undefined, undefined, Single.make(posts, activeRoute[0], /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, /* array */[]));
               }
-              return React.createElement("div", undefined, React.createElement("h1", undefined, React.createElement("a", {
+              return React.createElement("div", {
+                          className: "App"
+                        }, React.createElement("h1", undefined, React.createElement("a", {
                                   href: "/"
                                 }, "Catstagram")), tmp);
             }),

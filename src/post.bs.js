@@ -18,8 +18,8 @@ function make(post, _) {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function () {
-              var count = post[/* likes */3][/* count */0];
               var id = post[/* id */0];
+              var likes = String(post[/* likes */3][/* count */0]);
               return React.createElement("figure", {
                           className: "grid-figure"
                         }, React.createElement("div", {
@@ -33,15 +33,15 @@ function make(post, _) {
                                     }))), React.createElement("figcaption", undefined, React.createElement("p", undefined, post[/* caption */1][/* text */0]), React.createElement("div", {
                                   className: "control-buttons"
                                 }, React.createElement("button", {
-                                      className: post[/* user_has_liked */4] ? "liked" : ""
-                                    }, "&hearts; " + String(count)), React.createElement("a", {
+                                      className: post[/* user_has_liked */5] ? "liked" : ""
+                                    }, "♥ " + (String(likes) + "")), React.createElement("a", {
                                       className: "button",
                                       href: "/view/" + (String(id) + "")
                                     }, React.createElement("span", {
                                           className: "comment-count"
                                         }, React.createElement("span", {
                                               className: "speech-bubble"
-                                            }), String(count))))));
+                                            }), String(post[/* comments */4][/* count */0]))))));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],

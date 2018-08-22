@@ -6,7 +6,7 @@ type caption = {
   text: string /* description */
 };
 
-type likes = {
+type num = {
   count: int /* count */
 };
 
@@ -20,7 +20,8 @@ type post = {
   id: string, /* id */
   caption,
   images,
-  likes,
+  likes: num,
+  comments: num,
   user_has_liked: bool,
 };
 

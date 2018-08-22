@@ -64,13 +64,13 @@ let make = _children => {
     | ChangeRoute(activeRoute) => ReasonReact.Update({...state, activeRoute})
     },
   render: ({state: {load, activeRoute}}) =>
-    <div>
+    <div className="App">
       <h1> <a href="/"> {ReasonReact.string("Catstagram")} </a> </h1>
       {
         switch (load, activeRoute) {
         | (Error, _) =>
           <div> {ReasonReact.string("An error occurred! :(")} </div>
-        | (Loading, _) => <div> {ReasonReact.string("Loading...")} </div>
+        | (Loading, _) => <Spinner />
         | (Loaded(posts), Default) => <Grid posts />
         | (Loaded(posts), Detail(postId)) => <Single posts postId />
         }

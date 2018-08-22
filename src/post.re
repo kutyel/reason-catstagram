@@ -11,7 +11,9 @@ let make = (~post, _children) => {
       likes: {count},
       user_has_liked,
       caption: {text},
+      comments: {count: num_comments},
     } = post;
+    let likes = string_of_int(count);
     <figure className="grid-figure">
       <div className="grid-photo-wrap">
         <a href={j|/view/$id|j}>
@@ -22,12 +24,12 @@ let make = (~post, _children) => {
         <p> {ReasonReact.string(text)} </p>
         <div className="control-buttons">
           <button className={user_has_liked ? "liked" : ""}>
-            {ReasonReact.string("&hearts; " ++ string_of_int(count))}
+            {ReasonReact.string({j|♥ $likes|j})}
           </button>
           <a className="button" href={j|/view/$id|j}>
             <span className="comment-count">
               <span className="speech-bubble" />
-              {ReasonReact.string(string_of_int(count))}
+              {ReasonReact.string(string_of_int(num_comments))}
             </span>
           </a>
         </div>

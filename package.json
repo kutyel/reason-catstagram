@@ -13,10 +13,12 @@
   "scripts": {
     "bsb": "bsb -make-world -w",
     "clean": "bsb -clean-world",
-    "bundle": "parcel ./index.html"
+    "bundle": "parcel ./index.html",
+    "start": "concurrently 'npm run bsb' 'npm run bundle'"
   },
   "devDependencies": {
     "bs-platform": "^4.0.5",
+    "concurrently": "^3.6.1",
     "parcel-bundler": "^1.9.7"
   }
 }
