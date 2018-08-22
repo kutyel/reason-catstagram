@@ -14,7 +14,7 @@
     "bsb": "bsb -make-world -w",
     "clean": "bsb -clean-world",
     "bundle": "parcel ./index.html",
-    "start": "concurrently 'npm run bsb' 'npm run bundle'"
+    "start": "concurrently 'npm:bsb' 'npm:bundle' 'open http://localhost:1234'"
   },
   "devDependencies": {
     "bs-platform": "^4.0.5",

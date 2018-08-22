@@ -17,7 +17,7 @@ $ npm i
 ## Development
 
 ```sh
-$ npm start # then open http://localhost:1234
+$ npm start
 ```
 
 ## Usage
