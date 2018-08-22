@@ -80,7 +80,7 @@ function make() {
                                 fetch("https://api.instagram.com/v1/users/self/media/recent/?access_token=" + token).then((function (prim) {
                                             return prim.json();
                                           })).then((function (json) {
-                                          var cats = Decode.Decode[/* posts */5](json);
+                                          var cats = Decode.posts(json);
                                           return Promise.resolve(Curry._1(self[/* send */3], /* CatsFetched */Block.__(0, [cats])));
                                         })).catch((function () {
                                         return Promise.resolve(Curry._1(self[/* send */3], /* CatsFailedToFetch */1));

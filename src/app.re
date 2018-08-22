@@ -1,5 +1,4 @@
 open Types;
-open Decode;
 
 type state = {
   load,
@@ -54,9 +53,7 @@ let make = _children => {
                    |> (cats => self.send(CatsFetched(cats)))
                    |> resolve
                  )
-              |> catch(_err =>
-                   Js.Promise.resolve(self.send(CatsFailedToFetch))
-                 )
+              |> catch(_err => resolve(self.send(CatsFailedToFetch)))
               |> ignore
             )
         ),

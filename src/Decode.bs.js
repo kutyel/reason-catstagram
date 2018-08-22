@@ -24,7 +24,8 @@ function post(json) {
           /* id */Json_decode.field("id", Json_decode.string, json),
           /* caption */Json_decode.field("caption", caption, json),
           /* images */Json_decode.field("images", images, json),
-          /* likes */Json_decode.field("likes", likes, json)
+          /* likes */Json_decode.field("likes", likes, json),
+          /* user_has_liked */Json_decode.field("user_has_liked", Json_decode.bool, json)
         ];
 }
 
@@ -34,14 +35,10 @@ function posts(json) {
               }), json);
 }
 
-var Decode = /* module */[
-  /* caption */caption,
-  /* resolution */resolution,
-  /* likes */likes,
-  /* images */images,
-  /* post */post,
-  /* posts */posts
-];
-
-exports.Decode = Decode;
+exports.caption = caption;
+exports.resolution = resolution;
+exports.likes = likes;
+exports.images = images;
+exports.post = post;
+exports.posts = posts;
 /* No side effect */

@@ -9,6 +9,7 @@ let make = (~post, _children) => {
       id,
       images: {standard_resolution: {url}},
       likes: {count},
+      user_has_liked,
       caption: {text},
     } = post;
     <figure className="grid-figure">
@@ -20,7 +21,7 @@ let make = (~post, _children) => {
       <figcaption>
         <p> {ReasonReact.string(text)} </p>
         <div className="control-buttons">
-          <button className="liked">
+          <button className={user_has_liked ? "liked" : ""}>
             {ReasonReact.string("&hearts; " ++ string_of_int(count))}
           </button>
           <a className="button" href={j|/view/$id|j}>

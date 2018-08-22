@@ -33,7 +33,7 @@ function make(post, _) {
                                     }))), React.createElement("figcaption", undefined, React.createElement("p", undefined, post[/* caption */1][/* text */0]), React.createElement("div", {
                                   className: "control-buttons"
                                 }, React.createElement("button", {
-                                      className: "liked"
+                                      className: post[/* user_has_liked */4] ? "liked" : ""
                                     }, "&hearts; " + String(count)), React.createElement("a", {
                                       className: "button",
                                       href: "/view/" + (String(id) + "")

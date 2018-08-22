@@ -21,6 +21,7 @@ type post = {
   caption,
   images,
   likes,
+  user_has_liked: bool,
 };
 
 type load =
