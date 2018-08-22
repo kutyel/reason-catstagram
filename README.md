@@ -11,20 +11,13 @@ My very first ReasonReact app, of course, about cats! 🐈
 ## Install
 
 ```sh
-npm i
+$ npm i
 ```
 
 ## Development
 
 ```sh
-# run the bsb compiler
-npm run bsb
-
-# in another tab
-npm run bundle
-
-# and finally...
-open localhost:1234
+$ npm start # then open http://localhost:1234
 ```
 
 ## Usage
