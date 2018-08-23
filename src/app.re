@@ -1,14 +1,18 @@
 open Types;
+open Belt;
 
 type state = {
   load,
+  posts: list(post),
   activeRoute: route,
+  comments: list(string),
 };
 
 type action =
-  | CatsFetch
-  | CatsFailedToFetch
-  | CatsFetched(list(post))
+  | Fetch
+  | FailedToFetch
+  | Fetched(list(post))
+  | Like(post, bool)
   | ChangeRoute(route);
 
 let component = ReasonReact.reducerComponent("App");
@@ -23,6 +27,8 @@ let urlToRoute = url =>
 let make = _children => {
   ...component,
   initialState: () => {
+    posts: [],
+    comments: [],
     load: Loading,
     activeRoute: urlToRoute(ReasonReact.Router.dangerouslyGetInitialUrl()),
   },
@@ -31,12 +37,12 @@ let make = _children => {
       ReasonReact.Router.watchUrl(url =>
         self.send(ChangeRoute(urlToRoute(url)))
       );
-    self.send(CatsFetch);
+    self.send(Fetch);
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcher));
   },
   reducer: (action, state) =>
     switch (action) {
-    | CatsFetch =>
+    | Fetch =>
       ReasonReact.UpdateWithSideEffects(
         {...state, load: Loading},
         (
@@ -50,29 +56,46 @@ let make = _children => {
               |> then_(json =>
                    json
                    |> Decode.posts
-                   |> (cats => self.send(CatsFetched(cats)))
+                   |> (cats => self.send(Fetched(cats)))
                    |> resolve
                  )
-              |> catch(_err => resolve(self.send(CatsFailedToFetch)))
+              |> catch(_err => resolve(self.send(FailedToFetch)))
               |> ignore
             )
         ),
       )
-    | CatsFailedToFetch => ReasonReact.Update({...state, load: Error})
-    | CatsFetched(cats) =>
-      ReasonReact.Update({...state, load: Loaded(cats)})
+    | Like(post, like) =>
+      ReasonReact.Update({
+        ...state,
+        posts:
+          List.map(state.posts, p =>
+            p == post ?
+              {
+                ...p,
+                user_has_liked: like,
+                likes: {
+                  count: p.likes.count + (like ? 1 : (-1)),
+                },
+              } :
+              p
+          ),
+      })
+    | FailedToFetch => ReasonReact.Update({...state, load: Error})
+    | Fetched(posts) => ReasonReact.Update({...state, load: Loaded, posts})
     | ChangeRoute(activeRoute) => ReasonReact.Update({...state, activeRoute})
     },
-  render: ({state: {load, activeRoute}}) =>
+  render: ({state: {load, posts, activeRoute}, send}) => {
+    let onLike = (post, like) => send(Like(post, like));
     <div>
       <h1> <a href="/"> {ReasonReact.string("Catstagram")} </a> </h1>
       {
         switch (load, activeRoute) {
         | (Error, _) => <Error />
         | (Loading, _) => <Spinner />
-        | (Loaded(posts), Default) => <Grid posts />
-        | (Loaded(posts), Detail(postId)) => <Single posts postId />
+        | (Loaded, Default) => <Grid posts onLike />
+        | (Loaded, Detail(postId)) => <Single posts postId onLike />
         }
       }
-    </div>,
+    </div>;
+  },
 };

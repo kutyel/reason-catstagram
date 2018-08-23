@@ -1,7 +1,3 @@
-type route =
-  | Default
-  | Detail(string);
-
 type caption = {
   text: string /* description */
 };
@@ -25,7 +21,11 @@ type post = {
   user_has_liked: bool,
 };
 
+type route =
+  | Default
+  | Detail(string);
+
 type load =
   | Loading
-  | Error
-  | Loaded(list(post));
+  | Loaded
+  | Error;

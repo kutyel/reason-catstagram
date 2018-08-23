@@ -9,6 +9,8 @@ var React = require("react");
 var Decode = require("./Decode.js");
 var Single = require("./single.js");
 var Spinner = require("./spinner.js");
+var Caml_obj = require("bs-platform/lib/js/caml_obj.js");
+var Belt_List = require("bs-platform/lib/js/belt_List.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.reducerComponent("App");
@@ -37,9 +39,9 @@ function make() {
           /* willReceiveProps */component[/* willReceiveProps */3],
           /* didMount */(function (self) {
               var watcher = ReasonReact.Router[/* watchUrl */1]((function (url) {
-                      return Curry._1(self[/* send */3], /* ChangeRoute */Block.__(1, [urlToRoute(url)]));
+                      return Curry._1(self[/* send */3], /* ChangeRoute */Block.__(2, [urlToRoute(url)]));
                     }));
-              Curry._1(self[/* send */3], /* CatsFetch */0);
+              Curry._1(self[/* send */3], /* Fetch */0);
               return Curry._1(self[/* onUnmount */4], (function () {
                             return ReasonReact.Router[/* unwatchUrl */2](watcher);
                           }));
@@ -49,15 +51,28 @@ function make() {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function (param) {
+              var send = param[/* send */3];
               var match = param[/* state */1];
-              var activeRoute = match[/* activeRoute */1];
-              var load = match[/* load */0];
+              var activeRoute = match[/* activeRoute */2];
+              var posts = match[/* posts */1];
+              var onLike = function (post, like) {
+                return Curry._1(send, /* Like */Block.__(1, [
+                              post,
+                              like
+                            ]));
+              };
               var tmp;
-              if (typeof load === "number") {
-                tmp = load !== 0 ? ReasonReact.element(undefined, undefined, $$Error.make(/* array */[])) : ReasonReact.element(undefined, undefined, Spinner.make(/* array */[]));
-              } else {
-                var posts = load[0];
-                tmp = activeRoute ? ReasonReact.element(undefined, undefined, Single.make(posts, activeRoute[0], /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, /* array */[]));
+              switch (match[/* load */0]) {
+                case 0 : 
+                    tmp = ReasonReact.element(undefined, undefined, Spinner.make(/* array */[]));
+                    break;
+                case 1 : 
+                    tmp = activeRoute ? ReasonReact.element(undefined, undefined, Single.make(posts, activeRoute[0], onLike, /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, onLike, /* array */[]));
+                    break;
+                case 2 : 
+                    tmp = ReasonReact.element(undefined, undefined, $$Error.make(/* array */[]));
+                    break;
+                
               }
               return React.createElement("div", undefined, React.createElement("h1", undefined, React.createElement("a", {
                                   href: "/"
@@ -66,7 +81,9 @@ function make() {
           /* initialState */(function () {
               return /* record */[
                       /* load : Loading */0,
-                      /* activeRoute */urlToRoute(ReasonReact.Router[/* dangerouslyGetInitialUrl */3](/* () */0))
+                      /* posts : [] */0,
+                      /* activeRoute */urlToRoute(ReasonReact.Router[/* dangerouslyGetInitialUrl */3](/* () */0)),
+                      /* comments : [] */0
                     ];
             }),
           /* retainedProps */component[/* retainedProps */11],
@@ -76,36 +93,73 @@ function make() {
                   return /* UpdateWithSideEffects */Block.__(2, [
                             /* record */[
                               /* load : Loading */0,
-                              /* activeRoute */state[/* activeRoute */1]
+                              /* posts */state[/* posts */1],
+                              /* activeRoute */state[/* activeRoute */2],
+                              /* comments */state[/* comments */3]
                             ],
                             (function (self) {
                                 fetch("https://api.instagram.com/v1/users/self/media/recent/?access_token=" + token).then((function (prim) {
                                             return prim.json();
                                           })).then((function (json) {
                                           var cats = Decode.posts(json);
-                                          return Promise.resolve(Curry._1(self[/* send */3], /* CatsFetched */Block.__(0, [cats])));
+                                          return Promise.resolve(Curry._1(self[/* send */3], /* Fetched */Block.__(0, [cats])));
                                         })).catch((function () {
-                                        return Promise.resolve(Curry._1(self[/* send */3], /* CatsFailedToFetch */1));
+                                        return Promise.resolve(Curry._1(self[/* send */3], /* FailedToFetch */1));
                                       }));
                                 return /* () */0;
                               })
                           ]);
                 } else {
                   return /* Update */Block.__(0, [/* record */[
-                              /* load : Error */1,
-                              /* activeRoute */state[/* activeRoute */1]
+                              /* load : Error */2,
+                              /* posts */state[/* posts */1],
+                              /* activeRoute */state[/* activeRoute */2],
+                              /* comments */state[/* comments */3]
                             ]]);
                 }
-              } else if (action.tag) {
-                return /* Update */Block.__(0, [/* record */[
-                            /* load */state[/* load */0],
-                            /* activeRoute */action[0]
-                          ]]);
               } else {
-                return /* Update */Block.__(0, [/* record */[
-                            /* load : Loaded */[action[0]],
-                            /* activeRoute */state[/* activeRoute */1]
-                          ]]);
+                switch (action.tag | 0) {
+                  case 0 : 
+                      return /* Update */Block.__(0, [/* record */[
+                                  /* load : Loaded */1,
+                                  /* posts */action[0],
+                                  /* activeRoute */state[/* activeRoute */2],
+                                  /* comments */state[/* comments */3]
+                                ]]);
+                  case 1 : 
+                      var like = action[1];
+                      var post = action[0];
+                      return /* Update */Block.__(0, [/* record */[
+                                  /* load */state[/* load */0],
+                                  /* posts */Belt_List.map(state[/* posts */1], (function (p) {
+                                          var match = Caml_obj.caml_equal(p, post);
+                                          if (match) {
+                                            return /* record */[
+                                                    /* id */p[/* id */0],
+                                                    /* caption */p[/* caption */1],
+                                                    /* images */p[/* images */2],
+                                                    /* likes : record */[/* count */p[/* likes */3][/* count */0] + (
+                                                        like ? 1 : -1
+                                                      ) | 0],
+                                                    /* comments */p[/* comments */4],
+                                                    /* user_has_liked */like
+                                                  ];
+                                          } else {
+                                            return p;
+                                          }
+                                        })),
+                                  /* activeRoute */state[/* activeRoute */2],
+                                  /* comments */state[/* comments */3]
+                                ]]);
+                  case 2 : 
+                      return /* Update */Block.__(0, [/* record */[
+                                  /* load */state[/* load */0],
+                                  /* posts */state[/* posts */1],
+                                  /* activeRoute */action[0],
+                                  /* comments */state[/* comments */3]
+                                ]]);
+                  
+                }
               }
             }),
           /* jsElementWrapped */component[/* jsElementWrapped */13]

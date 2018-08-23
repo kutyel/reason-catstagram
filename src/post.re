@@ -2,7 +2,7 @@ let component = ReasonReact.statelessComponent("Post");
 
 open Types;
 
-let make = (~post, _children) => {
+let make = (~post, ~onLike, _children) => {
   ...component,
   render: _self => {
     let {
@@ -23,7 +23,9 @@ let make = (~post, _children) => {
       <figcaption>
         <p> {ReasonReact.string(text)} </p>
         <div className="control-buttons">
-          <button className={user_has_liked ? "liked" : ""}>
+          <button
+            onClick={_e => onLike(post, !user_has_liked)}
+            className={user_has_liked ? "liked" : ""}>
             {ReasonReact.string({j|♥ $likes|j})}
           </button>
           <a className="button" href={j|/view/$id|j}>
