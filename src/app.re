@@ -68,8 +68,7 @@ let make = _children => {
       <h1> <a href="/"> {ReasonReact.string("Catstagram")} </a> </h1>
       {
         switch (load, activeRoute) {
-        | (Error, _) =>
-          <div> {ReasonReact.string("An error occurred! :(")} </div>
+        | (Error, _) => <Error />
         | (Loading, _) => <Spinner />
         | (Loaded(posts), Default) => <Grid posts />
         | (Loaded(posts), Detail(postId)) => <Single posts postId />

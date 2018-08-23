@@ -19,7 +19,7 @@ function make() {
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function () {
               return React.createElement("div", {
-                          className: "lds-ring"
+                          className: "centered"
                         }, React.createElement("div", undefined), React.createElement("div", undefined), React.createElement("div", undefined), React.createElement("div", undefined));
             }),
           /* initialState */component[/* initialState */10],

@@ -10,8 +10,8 @@ let make = (~posts, ~postId, _children) => {
     <div className="single-photo">
       {
         switch (post) {
+        | None => <Error />
         | Some(post) => <Post post />
-        | None => ReasonReact.string("cat not found... :(")
         }
       }
     </div>;

@@ -19,7 +19,7 @@
   display: none;
 }
 
-.lds-ring {
+.centered {
   display: flex;
   position: absolute;
   align-items: center;

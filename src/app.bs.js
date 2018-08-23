@@ -4,6 +4,7 @@
 var Grid = require("./grid.bs.js");
 var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
+var $$Error = require("./error.bs.js");
 var React = require("react");
 var Decode = require("./Decode.bs.js");
 var Single = require("./single.bs.js");
@@ -53,7 +54,7 @@ function make() {
               var load = match[/* load */0];
               var tmp;
               if (typeof load === "number") {
-                tmp = load !== 0 ? React.createElement("div", undefined, "An error occurred! :(") : ReasonReact.element(undefined, undefined, Spinner.make(/* array */[]));
+                tmp = load !== 0 ? ReasonReact.element(undefined, undefined, $$Error.make(/* array */[])) : ReasonReact.element(undefined, undefined, Spinner.make(/* array */[]));
               } else {
                 var posts = load[0];
                 tmp = activeRoute ? ReasonReact.element(undefined, undefined, Single.make(posts, activeRoute[0], /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, /* array */[]));

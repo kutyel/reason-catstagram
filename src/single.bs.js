@@ -2,6 +2,7 @@
 'use strict';
 
 var Post = require("./post.bs.js");
+var $$Error = require("./error.bs.js");
 var React = require("react");
 var Belt_List = require("bs-platform/lib/js/belt_List.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
@@ -25,7 +26,7 @@ function make(posts, postId, _) {
                     }));
               return React.createElement("div", {
                           className: "single-photo"
-                        }, post !== undefined ? ReasonReact.element(undefined, undefined, Post.make(post, /* array */[])) : "cat not found... :(");
+                        }, post !== undefined ? ReasonReact.element(undefined, undefined, Post.make(post, /* array */[])) : ReasonReact.element(undefined, undefined, $$Error.make(/* array */[])));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
