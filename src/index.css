@@ -147,9 +147,9 @@ button:hover,
   outline: 0;
 }
 
-button:focus,
-.button:focus {
-  border-color: var(--blue);
+button:focus:not(.liked),
+.button:focus:not(.liked) {
+  border-color: var(--lightgrey);
   outline: 0;
 }
 

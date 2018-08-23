@@ -9,9 +9,11 @@ type state = {
 };
 
 type action =
-  | Fetch
+  | FetchPosts
+  /* | FetchComment(string) */
   | FailedToFetch
-  | Fetched(list(post))
+  | FetchedPosts(list(post))
+  | FetchedComments(list(string))
   | Like(post, bool)
   | ChangeRoute(route);
 
@@ -37,12 +39,12 @@ let make = _children => {
       ReasonReact.Router.watchUrl(url =>
         self.send(ChangeRoute(urlToRoute(url)))
       );
-    self.send(Fetch);
+    self.send(FetchPosts);
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcher));
   },
   reducer: (action, state) =>
     switch (action) {
-    | Fetch =>
+    | FetchPosts =>
       ReasonReact.UpdateWithSideEffects(
         {...state, load: Loading},
         (
@@ -56,7 +58,7 @@ let make = _children => {
               |> then_(json =>
                    json
                    |> Decode.posts
-                   |> (cats => self.send(Fetched(cats)))
+                   |> (posts => self.send(FetchedPosts(posts)))
                    |> resolve
                  )
               |> catch(_err => resolve(self.send(FailedToFetch)))
@@ -81,7 +83,10 @@ let make = _children => {
           ),
       })
     | FailedToFetch => ReasonReact.Update({...state, load: Error})
-    | Fetched(posts) => ReasonReact.Update({...state, load: Loaded, posts})
+    | FetchedPosts(posts) =>
+      ReasonReact.Update({...state, load: Loaded, posts})
+    | FetchedComments(comments) =>
+      ReasonReact.Update({...state, load: Loaded, comments})
     | ChangeRoute(activeRoute) => ReasonReact.Update({...state, activeRoute})
     },
   render: ({state: {load, posts, activeRoute}, send}) => {
