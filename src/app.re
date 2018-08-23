@@ -1,5 +1,4 @@
 open Types;
-open Belt;
 
 type state = {
   load,
@@ -70,17 +69,18 @@ let make = _children => {
       ReasonReact.Update({
         ...state,
         posts:
-          List.map(state.posts, p =>
-            p == post ?
-              {
-                ...p,
-                user_has_liked: like,
-                likes: {
-                  count: p.likes.count + (like ? 1 : (-1)),
-                },
-              } :
-              p
-          ),
+          state.posts
+          ->Belt.List.map(p =>
+              p == post ?
+                {
+                  ...p,
+                  user_has_liked: like,
+                  likes: {
+                    count: p.likes.count + (like ? 1 : (-1)),
+                  },
+                } :
+                p
+            ),
       })
     | FailedToFetch => ReasonReact.Update({...state, load: Error})
     | FetchedPosts(posts) =>
