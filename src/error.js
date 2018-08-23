@@ -19,7 +19,7 @@ function make() {
           /* shouldUpdate */extend[/* shouldUpdate */8],
           /* render */(function () {
               return React.createElement("div", {
-                          className: "centered"
+                          className: "spinner"
                         }, React.createElement("h1", undefined, "An error occurred! :("));
             }),
           /* initialState */extend[/* initialState */10],

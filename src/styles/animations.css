@@ -19,7 +19,7 @@
   display: none;
 }
 
-.centered {
+.spinner {
   display: flex;
   position: absolute;
   align-items: center;
@@ -29,7 +29,7 @@
   top: 0;
 }
 
-.lds-ring div {
+.spinner div {
   box-sizing: border-box;
   display: block;
   position: absolute;
@@ -42,15 +42,15 @@
   border-color: var(--blue) transparent transparent transparent;
 }
 
-.lds-ring div:nth-child(1) {
+.spinner div:nth-child(1) {
   animation-delay: -0.45s;
 }
 
-.lds-ring div:nth-child(2) {
+.spinner div:nth-child(2) {
   animation-delay: -0.3s;
 }
 
-.lds-ring div:nth-child(3) {
+.spinner div:nth-child(3) {
   animation-delay: -0.15s;
 }
 
