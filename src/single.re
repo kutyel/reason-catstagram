@@ -2,7 +2,8 @@ let component = ReasonReact.statelessComponent("Single");
 
 open Types;
 
-let make = (~posts, ~postId, ~onLike, _children) => {
+let make =
+    (~posts: list(post), ~postId, ~comments, ~onLike, ~onLink, _children) => {
   ...component,
   render: _self => {
     let post = posts->Belt.List.getBy(({id}) => id == postId);
@@ -10,9 +11,10 @@ let make = (~posts, ~postId, ~onLike, _children) => {
       {
         switch (post) {
         | None => <Error />
-        | Some(post) => <Post post onLike />
+        | Some(post) => <Post post onLike onLink />
         }
       }
+      <Comments comments />
     </div>;
   },
 };

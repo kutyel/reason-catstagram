@@ -4,12 +4,13 @@
 var Post = require("./post.js");
 var $$Error = require("./error.js");
 var React = require("react");
+var Comments = require("./comments.js");
 var Belt_List = require("bs-platform/lib/js/belt_List.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.statelessComponent("Single");
 
-function make(posts, postId, onLike, _) {
+function make(posts, postId, comments, onLike, onLink, _) {
   return /* record */[
           /* debugName */component[/* debugName */0],
           /* reactClassInternal */component[/* reactClassInternal */1],
@@ -26,7 +27,7 @@ function make(posts, postId, onLike, _) {
                     }));
               return React.createElement("div", {
                           className: "single-photo"
-                        }, post !== undefined ? ReasonReact.element(undefined, undefined, Post.make(post, onLike, /* array */[])) : ReasonReact.element(undefined, undefined, $$Error.make(/* array */[])));
+                        }, post !== undefined ? ReasonReact.element(undefined, undefined, Post.make(post, onLike, onLink, /* array */[])) : ReasonReact.element(undefined, undefined, $$Error.make(/* array */[])), ReasonReact.element(undefined, undefined, Comments.make(comments, /* array */[])));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],

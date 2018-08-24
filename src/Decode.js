@@ -19,6 +19,10 @@ function images(json) {
   return /* record */[/* standard_resolution */Json_decode.field("standard_resolution", resolution, json)];
 }
 
+function from(json) {
+  return /* record */[/* username */Json_decode.field("username", Json_decode.string, json)];
+}
+
 function post(json) {
   return /* record */[
           /* id */Json_decode.field("id", Json_decode.string, json),
@@ -30,9 +34,24 @@ function post(json) {
         ];
 }
 
+function comment(json) {
+  return /* record */[
+          /* id */Json_decode.field("id", Json_decode.string, json),
+          /* from */Json_decode.field("from", from, json),
+          /* text */Json_decode.field("text", Json_decode.string, json),
+          /* created_time */Json_decode.field("created_time", Json_decode.string, json)
+        ];
+}
+
 function posts(json) {
   return Json_decode.field("data", (function (param) {
                 return Json_decode.list(post, param);
+              }), json);
+}
+
+function comments(json) {
+  return Json_decode.field("data", (function (param) {
+                return Json_decode.list(comment, param);
               }), json);
 }
 
@@ -40,6 +59,9 @@ exports.caption = caption;
 exports.resolution = resolution;
 exports.num = num;
 exports.images = images;
+exports.from = from;
 exports.post = post;
+exports.comment = comment;
 exports.posts = posts;
+exports.comments = comments;
 /* No side effect */

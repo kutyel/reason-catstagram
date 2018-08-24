@@ -4,15 +4,15 @@ type state = {
   load,
   posts: list(post),
   activeRoute: route,
-  comments: list(string),
+  comments: list(comment),
 };
 
 type action =
   | FetchPosts
-  /* | FetchComment(string) */
+  | FetchComment(string)
   | FailedToFetch
   | FetchedPosts(list(post))
-  | FetchedComments(list(string))
+  | FetchedComments(list(comment))
   | Like(post, bool)
   | ChangeRoute(route);
 
@@ -50,14 +50,34 @@ let make = _children => {
           self =>
             Js.Promise.(
               Fetch.fetch(
-                "https://api.instagram.com/v1/users/self/media/recent/?access_token="
-                ++ token,
+                {j|https://api.instagram.com/v1/users/self/media/recent/?access_token=$token|j},
               )
               |> then_(Fetch.Response.json)
               |> then_(json =>
                    json
                    |> Decode.posts
                    |> (posts => self.send(FetchedPosts(posts)))
+                   |> resolve
+                 )
+              |> catch(_err => resolve(self.send(FailedToFetch)))
+              |> ignore
+            )
+        ),
+      )
+    | FetchComment(mediaId) =>
+      ReasonReact.UpdateWithSideEffects(
+        {...state, load: Loading},
+        (
+          self =>
+            Js.Promise.(
+              Fetch.fetch(
+                {j|https://api.instagram.com/v1/media/$mediaId/comments?access_token=$token|j},
+              )
+              |> then_(Fetch.Response.json)
+              |> then_(json =>
+                   json
+                   |> Decode.comments
+                   |> (comments => self.send(FetchedComments(comments)))
                    |> resolve
                  )
               |> catch(_err => resolve(self.send(FailedToFetch)))
@@ -87,9 +107,21 @@ let make = _children => {
       ReasonReact.Update({...state, load: Loaded, posts})
     | FetchedComments(comments) =>
       ReasonReact.Update({...state, load: Loaded, comments})
-    | ChangeRoute(activeRoute) => ReasonReact.Update({...state, activeRoute})
+    | ChangeRoute(activeRoute) =>
+      ReasonReact.UpdateWithSideEffects(
+        {...state, activeRoute},
+        (
+          self =>
+            switch (activeRoute) {
+            /* TODO: is this the correct what to route? */
+            | Default => Js.log("what goes here???")
+            | Detail(id) => self.send(FetchComment(id))
+            }
+        ),
+      )
     },
-  render: ({state: {load, posts, activeRoute}, send}) => {
+  render: ({state: {load, posts, comments, activeRoute}, send}) => {
+    let onLink = id => send(ChangeRoute(id));
     let onLike = (post, like) => send(Like(post, like));
     <div>
       <h1> <a href="/"> {ReasonReact.string("Catstagram")} </a> </h1>
@@ -97,8 +129,9 @@ let make = _children => {
         switch (load, activeRoute) {
         | (Error, _) => <Error />
         | (Loading, _) => <Spinner />
-        | (Loaded, Default) => <Grid posts onLike />
-        | (Loaded, Detail(postId)) => <Single posts postId onLike />
+        | (Loaded, Default) => <Grid posts onLike onLink />
+        | (Loaded, Detail(postId)) =>
+          <Single posts comments postId onLike onLink />
         }
       }
     </div>;
