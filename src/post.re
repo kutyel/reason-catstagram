@@ -11,7 +11,7 @@ let make = (~post, ~onLike, ~onLink, _children) => {
       likes: {count},
       user_has_liked,
       caption: {text},
-      comments: {count: num_comments},
+      num_comments: {count: num_comments},
     } = post;
     let likes = string_of_int(count);
     let onClick = e => {

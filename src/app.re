@@ -1,11 +1,9 @@
 open Types;
 
-type state = {
-  load,
-  posts: list(post),
-  activeRoute: route,
-  comments: list(comment),
-};
+type state =
+  | Error
+  | Loading
+  | Loaded(route, list(post));
 
 type action =
   | FetchPosts
@@ -22,17 +20,12 @@ let token = [%raw "process.env.API_TOKEN"];
 let urlToRoute = url =>
   switch (ReasonReact.Router.(url.path)) {
   | ["view", postId] => Detail(postId)
-  | _ => Default
+  | _ => Base
   };
 
 let make = _children => {
   ...component,
-  initialState: () => {
-    posts: [],
-    comments: [],
-    load: Loading,
-    activeRoute: urlToRoute(ReasonReact.Router.dangerouslyGetInitialUrl()),
-  },
+  initialState: () => Loading,
   didMount: self => {
     let watcher =
       ReasonReact.Router.watchUrl(url =>
@@ -45,9 +38,9 @@ let make = _children => {
     switch (action) {
     | FetchPosts =>
       ReasonReact.UpdateWithSideEffects(
-        {...state, load: Loading},
+        Loading,
         (
-          self =>
+          ({send}) =>
             Js.Promise.(
               Fetch.fetch(
                 {j|https://api.instagram.com/v1/users/self/media/recent/?access_token=$token|j},
@@ -56,19 +49,19 @@ let make = _children => {
               |> then_(json =>
                    json
                    |> Decode.posts
-                   |> (posts => self.send(FetchedPosts(posts)))
+                   |> (posts => send(FetchedPosts(posts)))
                    |> resolve
                  )
-              |> catch(_err => resolve(self.send(FailedToFetch)))
+              |> catch(_err => resolve(send(FailedToFetch)))
               |> ignore
             )
         ),
       )
     | FetchComments(mediaId) =>
       ReasonReact.UpdateWithSideEffects(
-        {...state, load: Loading},
+        Loading,
         (
-          self =>
+          ({send}) =>
             Js.Promise.(
               Fetch.fetch(
                 {j|https://api.instagram.com/v1/media/$mediaId/comments?access_token=$token|j},
@@ -77,62 +70,76 @@ let make = _children => {
               |> then_(json =>
                    json
                    |> Decode.comments
-                   |> (comments => self.send(FetchedComments(comments)))
+                   |> (comments => send(FetchedComments(comments)))
                    |> resolve
                  )
-              |> catch(_err => resolve(self.send(FailedToFetch)))
+              |> catch(_err => resolve(send(FailedToFetch)))
               |> ignore
             )
         ),
       )
     | Like(post, like) =>
-      ReasonReact.Update({
-        ...state,
-        posts:
-          state.posts
-          ->Belt.List.map(p =>
-              p == post ?
-                {
-                  ...p,
-                  user_has_liked: like,
-                  likes: {
-                    count: p.likes.count + (like ? 1 : (-1)),
-                  },
-                } :
-                p
-            ),
-      })
-    | FailedToFetch => ReasonReact.Update({...state, load: Error})
+      ReasonReact.Update(
+        switch (state) {
+        | Loaded(route, posts) =>
+          Loaded(
+            route,
+            posts
+            ->Belt.List.map(p =>
+                p == post ?
+                  {
+                    ...p,
+                    user_has_liked: like,
+                    likes: {
+                      count: p.likes.count + (like ? 1 : (-1)),
+                    },
+                  } :
+                  p
+              ),
+          )
+        | _ => state
+        },
+      )
+    | FailedToFetch => ReasonReact.Update(Error)
     | FetchedPosts(posts) =>
-      ReasonReact.Update({...state, load: Loaded, posts})
+      ReasonReact.Update(
+        Loaded(
+          urlToRoute(ReasonReact.Router.dangerouslyGetInitialUrl()),
+          posts,
+        ),
+      )
     | FetchedComments(comments) =>
-      ReasonReact.Update({...state, load: Loaded, comments})
-    | ChangeRoute(activeRoute) =>
-      let prev = state.activeRoute;
+      Js.log(comments);
+      ReasonReact.NoUpdate;
+    | ChangeRoute(route) =>
       ReasonReact.UpdateWithSideEffects(
-        {...state, activeRoute},
+        switch (state) {
+        | Loaded(_, posts) => Loaded(route, posts)
+        | _ => state
+        },
         (
           self =>
-            switch (activeRoute) {
-            | Detail(id) when activeRoute != prev =>
-              self.send(FetchComments(id))
+            switch (route) {
+            | Detail(id) => self.send(FetchComments(id))
             | _ => ()
             }
         ),
-      );
+      )
     },
-  render: ({state: {load, posts, comments, activeRoute}, send}) => {
+  render: ({state, send}) => {
     let onLink = id => send(ChangeRoute(id));
     let onLike = (post, like) => send(Like(post, like));
     <div>
       <h1> <a href="/"> {ReasonReact.string("Catstagram")} </a> </h1>
       {
-        switch (load, activeRoute) {
-        | (Error, _) => <Error />
-        | (Loading, _) => <Spinner />
-        | (Loaded, Default) => <Grid posts onLike onLink />
-        | (Loaded, Detail(postId)) =>
-          <Single posts comments postId onLike onLink />
+        switch (state) {
+        | Error => <Error />
+        | Loading => <Spinner />
+        | Loaded(route, posts) =>
+          switch (route) {
+          | Base => <Grid posts onLike onLink />
+          | Detail(postId) => <Single posts postId onLike onLink />
+          }
         }
       }
     </div>;

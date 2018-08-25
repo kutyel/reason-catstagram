@@ -52,7 +52,7 @@ function make(post, onLike, onLink, _) {
                                           className: "comment-count"
                                         }, React.createElement("span", {
                                               className: "speech-bubble"
-                                            }), String(post[/* comments */4][/* count */0]))))));
+                                            }), String(post[/* num_comments */4][/* count */0]))))));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],

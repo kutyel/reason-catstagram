@@ -14,7 +14,8 @@ let post = json =>
     caption: json |> field("caption", caption),
     images: json |> field("images", images),
     likes: json |> field("likes", num),
-    comments: json |> field("comments", num),
+    num_comments: json |> field("comments", num),
+    comments: [],
     user_has_liked: json |> field("user_has_liked", bool),
   };
 let comment = json =>

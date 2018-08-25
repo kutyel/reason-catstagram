@@ -29,8 +29,9 @@ function post(json) {
           /* caption */Json_decode.field("caption", caption, json),
           /* images */Json_decode.field("images", images, json),
           /* likes */Json_decode.field("likes", num, json),
-          /* comments */Json_decode.field("comments", num, json),
-          /* user_has_liked */Json_decode.field("user_has_liked", Json_decode.bool, json)
+          /* num_comments */Json_decode.field("comments", num, json),
+          /* user_has_liked */Json_decode.field("user_has_liked", Json_decode.bool, json),
+          /* comments : [] */0
         ];
 }
 

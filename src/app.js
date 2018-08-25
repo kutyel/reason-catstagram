@@ -24,10 +24,10 @@ function urlToRoute(url) {
     if (match$1 && !match$1[1]) {
       return /* Detail */[match$1[0]];
     } else {
-      return /* Default */0;
+      return /* Base */0;
     }
   } else {
-    return /* Default */0;
+    return /* Base */0;
   }
 }
 
@@ -52,9 +52,7 @@ function make() {
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function (param) {
               var send = param[/* send */3];
-              var match = param[/* state */1];
-              var activeRoute = match[/* activeRoute */2];
-              var posts = match[/* posts */1];
+              var state = param[/* state */1];
               var onLink = function (id) {
                 return Curry._1(send, /* ChangeRoute */Block.__(4, [id]));
               };
@@ -65,136 +63,103 @@ function make() {
                             ]));
               };
               var tmp;
-              switch (match[/* load */0]) {
-                case 0 : 
-                    tmp = ReasonReact.element(undefined, undefined, Spinner.make(/* array */[]));
-                    break;
-                case 1 : 
-                    tmp = activeRoute ? ReasonReact.element(undefined, undefined, Single.make(posts, activeRoute[0], match[/* comments */3], onLike, onLink, /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, onLike, onLink, /* array */[]));
-                    break;
-                case 2 : 
-                    tmp = ReasonReact.element(undefined, undefined, $$Error.make(/* array */[]));
-                    break;
-                
+              if (typeof state === "number") {
+                tmp = state !== 0 ? ReasonReact.element(undefined, undefined, Spinner.make(/* array */[])) : ReasonReact.element(undefined, undefined, $$Error.make(/* array */[]));
+              } else {
+                var posts = state[1];
+                var route = state[0];
+                tmp = route ? ReasonReact.element(undefined, undefined, Single.make(posts, route[0], onLike, onLink, /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, onLike, onLink, /* array */[]));
               }
               return React.createElement("div", undefined, React.createElement("h1", undefined, React.createElement("a", {
                                   href: "/"
                                 }, "Catstagram")), tmp);
             }),
           /* initialState */(function () {
-              return /* record */[
-                      /* load : Loading */0,
-                      /* posts : [] */0,
-                      /* activeRoute */urlToRoute(ReasonReact.Router[/* dangerouslyGetInitialUrl */3](/* () */0)),
-                      /* comments : [] */0
-                    ];
+              return /* Loading */1;
             }),
           /* retainedProps */component[/* retainedProps */11],
           /* reducer */(function (action, state) {
               if (typeof action === "number") {
                 if (action === 0) {
                   return /* UpdateWithSideEffects */Block.__(2, [
-                            /* record */[
-                              /* load : Loading */0,
-                              /* posts */state[/* posts */1],
-                              /* activeRoute */state[/* activeRoute */2],
-                              /* comments */state[/* comments */3]
-                            ],
-                            (function (self) {
+                            /* Loading */1,
+                            (function (param) {
+                                var send = param[/* send */3];
                                 fetch("https://api.instagram.com/v1/users/self/media/recent/?access_token=" + (String(token) + "")).then((function (prim) {
                                             return prim.json();
                                           })).then((function (json) {
                                           var posts = Decode.posts(json);
-                                          return Promise.resolve(Curry._1(self[/* send */3], /* FetchedPosts */Block.__(1, [posts])));
+                                          return Promise.resolve(Curry._1(send, /* FetchedPosts */Block.__(1, [posts])));
                                         })).catch((function () {
-                                        return Promise.resolve(Curry._1(self[/* send */3], /* FailedToFetch */1));
+                                        return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
                                       }));
                                 return /* () */0;
                               })
                           ]);
                 } else {
-                  return /* Update */Block.__(0, [/* record */[
-                              /* load : Error */2,
-                              /* posts */state[/* posts */1],
-                              /* activeRoute */state[/* activeRoute */2],
-                              /* comments */state[/* comments */3]
-                            ]]);
+                  return /* Update */Block.__(0, [/* Error */0]);
                 }
               } else {
                 switch (action.tag | 0) {
                   case 0 : 
                       var mediaId = action[0];
                       return /* UpdateWithSideEffects */Block.__(2, [
-                                /* record */[
-                                  /* load : Loading */0,
-                                  /* posts */state[/* posts */1],
-                                  /* activeRoute */state[/* activeRoute */2],
-                                  /* comments */state[/* comments */3]
-                                ],
-                                (function (self) {
+                                /* Loading */1,
+                                (function (param) {
+                                    var send = param[/* send */3];
                                     fetch("https://api.instagram.com/v1/media/" + (String(mediaId) + ("/comments?access_token=" + (String(token) + "")))).then((function (prim) {
                                                 return prim.json();
                                               })).then((function (json) {
                                               var comments = Decode.comments(json);
-                                              return Promise.resolve(Curry._1(self[/* send */3], /* FetchedComments */Block.__(2, [comments])));
+                                              return Promise.resolve(Curry._1(send, /* FetchedComments */Block.__(2, [comments])));
                                             })).catch((function () {
-                                            return Promise.resolve(Curry._1(self[/* send */3], /* FailedToFetch */1));
+                                            return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
                                           }));
                                     return /* () */0;
                                   })
                               ]);
                   case 1 : 
-                      return /* Update */Block.__(0, [/* record */[
-                                  /* load : Loaded */1,
-                                  /* posts */action[0],
-                                  /* activeRoute */state[/* activeRoute */2],
-                                  /* comments */state[/* comments */3]
+                      return /* Update */Block.__(0, [/* Loaded */[
+                                  urlToRoute(ReasonReact.Router[/* dangerouslyGetInitialUrl */3](/* () */0)),
+                                  action[0]
                                 ]]);
                   case 2 : 
-                      return /* Update */Block.__(0, [/* record */[
-                                  /* load : Loaded */1,
-                                  /* posts */state[/* posts */1],
-                                  /* activeRoute */state[/* activeRoute */2],
-                                  /* comments */action[0]
-                                ]]);
+                      console.log(action[0]);
+                      return /* NoUpdate */0;
                   case 3 : 
                       var like = action[1];
                       var post = action[0];
-                      return /* Update */Block.__(0, [/* record */[
-                                  /* load */state[/* load */0],
-                                  /* posts */Belt_List.map(state[/* posts */1], (function (p) {
-                                          var match = Caml_obj.caml_equal(p, post);
-                                          if (match) {
-                                            return /* record */[
-                                                    /* id */p[/* id */0],
-                                                    /* caption */p[/* caption */1],
-                                                    /* images */p[/* images */2],
-                                                    /* likes : record */[/* count */p[/* likes */3][/* count */0] + (
-                                                        like ? 1 : -1
-                                                      ) | 0],
-                                                    /* comments */p[/* comments */4],
-                                                    /* user_has_liked */like
-                                                  ];
-                                          } else {
-                                            return p;
-                                          }
-                                        })),
-                                  /* activeRoute */state[/* activeRoute */2],
-                                  /* comments */state[/* comments */3]
-                                ]]);
+                      return /* Update */Block.__(0, [typeof state === "number" ? state : /* Loaded */[
+                                    state[0],
+                                    Belt_List.map(state[1], (function (p) {
+                                            var match = Caml_obj.caml_equal(p, post);
+                                            if (match) {
+                                              return /* record */[
+                                                      /* id */p[/* id */0],
+                                                      /* caption */p[/* caption */1],
+                                                      /* images */p[/* images */2],
+                                                      /* likes : record */[/* count */p[/* likes */3][/* count */0] + (
+                                                          like ? 1 : -1
+                                                        ) | 0],
+                                                      /* num_comments */p[/* num_comments */4],
+                                                      /* user_has_liked */like,
+                                                      /* comments */p[/* comments */6]
+                                                    ];
+                                            } else {
+                                              return p;
+                                            }
+                                          }))
+                                  ]]);
                   case 4 : 
-                      var activeRoute = action[0];
-                      var prev = state[/* activeRoute */2];
+                      var route = action[0];
                       return /* UpdateWithSideEffects */Block.__(2, [
-                                /* record */[
-                                  /* load */state[/* load */0],
-                                  /* posts */state[/* posts */1],
-                                  /* activeRoute */activeRoute,
-                                  /* comments */state[/* comments */3]
-                                ],
+                                typeof state === "number" ? state : /* Loaded */[
+                                    route,
+                                    state[1]
+                                  ],
                                 (function (self) {
-                                    if (activeRoute && Caml_obj.caml_notequal(activeRoute, prev)) {
-                                      return Curry._1(self[/* send */3], /* FetchComments */Block.__(0, [activeRoute[0]]));
+                                    if (route) {
+                                      return Curry._1(self[/* send */3], /* FetchComments */Block.__(0, [route[0]]));
                                     } else {
                                       return /* () */0;
                                     }

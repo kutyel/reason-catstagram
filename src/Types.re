@@ -26,15 +26,11 @@ type post = {
   caption,
   images,
   likes: num,
-  comments: num,
+  num_comments: num,
   user_has_liked: bool,
+  comments: list(comment),
 };
 
 type route =
-  | Default
+  | Base
   | Detail(string);
-
-type load =
-  | Loading
-  | Loaded
-  | Error;

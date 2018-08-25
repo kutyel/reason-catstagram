@@ -10,7 +10,7 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.statelessComponent("Single");
 
-function make(posts, postId, comments, onLike, onLink, _) {
+function make(posts, postId, onLike, onLink, _) {
   return /* record */[
           /* debugName */component[/* debugName */0],
           /* reactClassInternal */component[/* reactClassInternal */1],
@@ -25,9 +25,14 @@ function make(posts, postId, comments, onLike, onLink, _) {
               var post = Belt_List.getBy(posts, (function (param) {
                       return param[/* id */0] === postId;
                     }));
-              return React.createElement("div", {
-                          className: "single-photo"
-                        }, post !== undefined ? ReasonReact.element(undefined, undefined, Post.make(post, onLike, onLink, /* array */[])) : ReasonReact.element(undefined, undefined, $$Error.make(/* array */[])), ReasonReact.element(undefined, undefined, Comments.make(comments, /* array */[])));
+              if (post !== undefined) {
+                var post$1 = post;
+                return React.createElement("div", {
+                            className: "single-photo"
+                          }, ReasonReact.element(undefined, undefined, Post.make(post$1, onLike, onLink, /* array */[])), ReasonReact.element(undefined, undefined, Comments.make(post$1[/* comments */6], /* array */[])));
+              } else {
+                return ReasonReact.element(undefined, undefined, $$Error.make(/* array */[]));
+              }
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
