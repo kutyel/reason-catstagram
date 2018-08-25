@@ -6,7 +6,7 @@ let make = (~post, ~onLike, ~onLink, _children) => {
   ...component,
   render: _self => {
     let {
-      id,
+      Post.id,
       images: {standard_resolution: {url}},
       likes: {count},
       user_has_liked,

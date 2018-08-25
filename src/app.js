@@ -5,8 +5,8 @@ var Grid = require("./grid.js");
 var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var $$Error = require("./error.js");
+var Types = require("./Types.js");
 var React = require("react");
-var Decode = require("./Decode.js");
 var Single = require("./single.js");
 var Spinner = require("./spinner.js");
 var Caml_obj = require("bs-platform/lib/js/caml_obj.js");
@@ -88,7 +88,7 @@ function make() {
                                 fetch("https://api.instagram.com/v1/users/self/media/recent/?access_token=" + (String(token) + "")).then((function (prim) {
                                             return prim.json();
                                           })).then((function (json) {
-                                          var posts = Decode.posts(json);
+                                          var posts = Types.Post[/* decodePosts */1](json);
                                           return Promise.resolve(Curry._1(send, /* FetchedPosts */Block.__(1, [posts])));
                                         })).catch((function () {
                                         return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
@@ -110,7 +110,7 @@ function make() {
                                     fetch("https://api.instagram.com/v1/media/" + (String(mediaId) + ("/comments?access_token=" + (String(token) + "")))).then((function (prim) {
                                                 return prim.json();
                                               })).then((function (json) {
-                                              var comments = Decode.comments(json);
+                                              var comments = Types.Comment[/* decodeComments */1](json);
                                               return Promise.resolve(Curry._1(send, /* FetchedComments */Block.__(2, [comments])));
                                             })).catch((function () {
                                             return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
@@ -173,6 +173,9 @@ function make() {
         ];
 }
 
+var T = 0;
+
+exports.T = T;
 exports.component = component;
 exports.token = token;
 exports.urlToRoute = urlToRoute;

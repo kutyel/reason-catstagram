@@ -1,25 +1,25 @@
-open Types;
+module T = Types;
 
 type state =
   | Error
   | Loading
-  | Loaded(route, list(post));
+  | Loaded(T.route, list(T.Post.t));
 
 type action =
   | FetchPosts
   | FetchComments(string)
   | FailedToFetch
-  | FetchedPosts(list(post))
-  | FetchedComments(list(comment))
-  | Like(post, bool)
-  | ChangeRoute(route);
+  | FetchedPosts(list(T.Post.t))
+  | FetchedComments(list(T.Comment.t))
+  | Like(T.Post.t, bool)
+  | ChangeRoute(T.route);
 
 let component = ReasonReact.reducerComponent("App");
 
 let token = [%raw "process.env.API_TOKEN"];
 let urlToRoute = url =>
   switch (ReasonReact.Router.(url.path)) {
-  | ["view", postId] => Detail(postId)
+  | ["view", postId] => T.Detail(postId)
   | _ => Base
   };
 
@@ -48,7 +48,7 @@ let make = _children => {
               |> then_(Fetch.Response.json)
               |> then_(json =>
                    json
-                   |> Decode.posts
+                   |> T.Post.decodePosts
                    |> (posts => send(FetchedPosts(posts)))
                    |> resolve
                  )
@@ -69,7 +69,7 @@ let make = _children => {
               |> then_(Fetch.Response.json)
               |> then_(json =>
                    json
-                   |> Decode.comments
+                   |> T.Comment.decodeComments
                    |> (comments => send(FetchedComments(comments)))
                    |> resolve
                  )
