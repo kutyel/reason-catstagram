@@ -12,15 +12,6 @@ type resolution = {
 
 type images = {standard_resolution: resolution};
 
-type post = {
-  id: string, /* id */
-  caption,
-  images,
-  likes: num,
-  comments: num,
-  user_has_liked: bool,
-};
-
 type from = {username: string};
 
 type comment = {
@@ -28,6 +19,15 @@ type comment = {
   from,
   text: string,
   created_time: string,
+};
+
+type post = {
+  id: string,
+  caption,
+  images,
+  likes: num,
+  comments: num,
+  user_has_liked: bool,
 };
 
 type route =

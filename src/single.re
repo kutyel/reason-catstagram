@@ -2,8 +2,7 @@ let component = ReasonReact.statelessComponent("Single");
 
 open Types;
 
-let make =
-    (~posts: list(post), ~postId, ~comments, ~onLike, ~onLink, _children) => {
+let make = (~posts, ~postId, ~comments, ~onLike, ~onLink, _children) => {
   ...component,
   render: _self => {
     let post = posts->Belt.List.getBy(({id}) => id == postId);

@@ -9,7 +9,7 @@ type state = {
 
 type action =
   | FetchPosts
-  | FetchComment(string)
+  | FetchComments(string)
   | FailedToFetch
   | FetchedPosts(list(post))
   | FetchedComments(list(comment))
@@ -64,7 +64,7 @@ let make = _children => {
             )
         ),
       )
-    | FetchComment(mediaId) =>
+    | FetchComments(mediaId) =>
       ReasonReact.UpdateWithSideEffects(
         {...state, load: Loading},
         (
@@ -108,17 +108,18 @@ let make = _children => {
     | FetchedComments(comments) =>
       ReasonReact.Update({...state, load: Loaded, comments})
     | ChangeRoute(activeRoute) =>
+      let prev = state.activeRoute;
       ReasonReact.UpdateWithSideEffects(
         {...state, activeRoute},
         (
           self =>
             switch (activeRoute) {
-            /* TODO: is this the correct what to route? */
-            | Default => Js.log("what goes here???")
-            | Detail(id) => self.send(FetchComment(id))
+            | Detail(id) when activeRoute != prev =>
+              self.send(FetchComments(id))
+            | _ => ()
             }
         ),
-      )
+      );
     },
   render: ({state: {load, posts, comments, activeRoute}, send}) => {
     let onLink = id => send(ChangeRoute(id));

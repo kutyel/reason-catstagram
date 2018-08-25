@@ -14,13 +14,13 @@ let make = (~post, ~onLike, ~onLink, _children) => {
       comments: {count: num_comments},
     } = post;
     let likes = string_of_int(count);
-    let navigate = e => {
+    let onClick = e => {
       ReactEvent.Mouse.preventDefault(e);
       onLink(Detail(id));
     };
     <figure className="grid-figure">
       <div className="grid-photo-wrap">
-        <a href={j|/view/$id|j} onClick=navigate>
+        <a href={j|/view/$id|j} onClick>
           <img src=url alt=id className="grid-photo" />
         </a>
       </div>
@@ -32,7 +32,7 @@ let make = (~post, ~onLike, ~onLink, _children) => {
             className={user_has_liked ? "liked" : ""}>
             {ReasonReact.string({j|♥ $likes|j})}
           </button>
-          <a className="button" href={j|/view/$id|j} onClick=navigate>
+          <a className="button" href={j|/view/$id|j} onClick>
             <span className="comment-count">
               <span className="speech-bubble" />
               {ReasonReact.string(string_of_int(num_comments))}

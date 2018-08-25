@@ -39,6 +39,7 @@ function make(comments, _) {
                                   placeholder: "comment",
                                   type: "text"
                                 }), React.createElement("input", {
+                                  hidden: true,
                                   type: "submit"
                                 })));
             }),

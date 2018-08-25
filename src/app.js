@@ -184,6 +184,7 @@ function make() {
                                 ]]);
                   case 4 : 
                       var activeRoute = action[0];
+                      var prev = state[/* activeRoute */2];
                       return /* UpdateWithSideEffects */Block.__(2, [
                                 /* record */[
                                   /* load */state[/* load */0],
@@ -192,10 +193,9 @@ function make() {
                                   /* comments */state[/* comments */3]
                                 ],
                                 (function (self) {
-                                    if (activeRoute) {
-                                      return Curry._1(self[/* send */3], /* FetchComment */Block.__(0, [activeRoute[0]]));
+                                    if (activeRoute && Caml_obj.caml_notequal(activeRoute, prev)) {
+                                      return Curry._1(self[/* send */3], /* FetchComments */Block.__(0, [activeRoute[0]]));
                                     } else {
-                                      console.log("what goes here???");
                                       return /* () */0;
                                     }
                                   })

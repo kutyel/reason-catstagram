@@ -28,8 +28,7 @@ let make = (~comments, _children) => {
       <form className="comment-form">
         <input type_="text" placeholder="author" />
         <input type_="text" placeholder="comment" />
-        /* This should be hidden */
-        <input type_="submit" />
+        <input type_="submit" hidden=true />
       </form>
     </div>,
 };

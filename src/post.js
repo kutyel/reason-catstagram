@@ -22,7 +22,7 @@ function make(post, onLike, onLink, _) {
               var user_has_liked = post[/* user_has_liked */5];
               var id = post[/* id */0];
               var likes = String(post[/* likes */3][/* count */0]);
-              var navigate = function (e) {
+              var onClick = function (e) {
                 e.preventDefault();
                 return Curry._1(onLink, /* Detail */[id]);
               };
@@ -32,7 +32,7 @@ function make(post, onLike, onLink, _) {
                               className: "grid-photo-wrap"
                             }, React.createElement("a", {
                                   href: "/view/" + (String(id) + ""),
-                                  onClick: navigate
+                                  onClick: onClick
                                 }, React.createElement("img", {
                                       className: "grid-photo",
                                       alt: id,
@@ -47,7 +47,7 @@ function make(post, onLike, onLink, _) {
                                     }, "♥ " + (String(likes) + "")), React.createElement("a", {
                                       className: "button",
                                       href: "/view/" + (String(id) + ""),
-                                      onClick: navigate
+                                      onClick: onClick
                                     }, React.createElement("span", {
                                           className: "comment-count"
                                         }, React.createElement("span", {

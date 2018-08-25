@@ -3,7 +3,7 @@ let component = ReasonReact.statelessComponent("Grid");
 open Belt;
 open Types;
 
-let make = (~posts: list(post), ~onLike, ~onLink, _children) => {
+let make = (~posts, ~onLike, ~onLink, _children) => {
   ...component,
   render: _self =>
     <div className="photo-grid">
