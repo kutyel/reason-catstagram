@@ -10,7 +10,7 @@ type action =
   | FetchComments(string)
   | FailedToFetch
   | FetchedPosts(list(T.Post.t))
-  | FetchedComments(list(T.Comment.t))
+  | FetchedComments(string, list(T.Comment.t))
   | Like(T.Post.t, bool)
   | ChangeRoute(T.route);
 
@@ -26,7 +26,10 @@ let urlToRoute = url =>
 let make = _children => {
   ...component,
   initialState: () => Loading,
+  /* TODO: remove this once sure we're not re-rendering app again and again... */
+  willUnmount: _self => Js.log("unmounted!"),
   didMount: self => {
+    Js.log("mounted");
     let watcher =
       ReasonReact.Router.watchUrl(url =>
         self.send(ChangeRoute(urlToRoute(url)))
@@ -48,7 +51,7 @@ let make = _children => {
               |> then_(Fetch.Response.json)
               |> then_(json =>
                    json
-                   |> T.Post.decodePosts
+                   |> T.Post.decode
                    |> (posts => send(FetchedPosts(posts)))
                    |> resolve
                  )
@@ -69,8 +72,8 @@ let make = _children => {
               |> then_(Fetch.Response.json)
               |> then_(json =>
                    json
-                   |> T.Comment.decodeComments
-                   |> (comments => send(FetchedComments(comments)))
+                   |> T.Comment.decode
+                   |> (comments => send(FetchedComments(mediaId, comments)))
                    |> resolve
                  )
               |> catch(_err => resolve(send(FailedToFetch)))
@@ -108,9 +111,14 @@ let make = _children => {
           posts,
         ),
       )
-    | FetchedComments(comments) =>
-      Js.log(comments);
-      ReasonReact.NoUpdate;
+    | FetchedComments(postId, comments) =>
+      switch (state) {
+      | Loaded(route, posts) =>
+        let posts =
+          posts->Belt.List.map(p => p.id == postId ? {...p, comments} : p);
+        ReasonReact.Update(Loaded(route, posts));
+      | _ => ReasonReact.NoUpdate
+      }
     | ChangeRoute(route) =>
       ReasonReact.UpdateWithSideEffects(
         switch (state) {

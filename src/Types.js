@@ -3,6 +3,12 @@
 
 var Json_decode = require("@glennsl/bs-json/src/Json_decode.bs.js");
 
+function decode(from, json) {
+  return Json_decode.field("data", (function (param) {
+                return Json_decode.list(from, param);
+              }), json);
+}
+
 function fromJson(json) {
   return /* record */[/* text */Json_decode.field("text", Json_decode.string, json)];
 }
@@ -42,15 +48,13 @@ function fromJson$5(json) {
         ];
 }
 
-function decodeComments(json) {
-  return Json_decode.field("data", (function (param) {
-                return Json_decode.list(fromJson$5, param);
-              }), json);
+function decode$1(param) {
+  return decode(fromJson$5, param);
 }
 
 var Comment = /* module */[
   /* fromJson */fromJson$5,
-  /* decodeComments */decodeComments
+  /* decode */decode$1
 ];
 
 function fromJson$6(json) {
@@ -65,17 +69,16 @@ function fromJson$6(json) {
         ];
 }
 
-function decodePosts(json) {
-  return Json_decode.field("data", (function (param) {
-                return Json_decode.list(fromJson$6, param);
-              }), json);
+function decode$2(param) {
+  return decode(fromJson$6, param);
 }
 
 var Post = /* module */[
   /* fromJson */fromJson$6,
-  /* decodePosts */decodePosts
+  /* decode */decode$2
 ];
 
+exports.decode = decode;
 exports.Caption = Caption;
 exports.Num = Num;
 exports.Resolution = Resolution;

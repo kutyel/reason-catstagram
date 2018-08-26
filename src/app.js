@@ -38,6 +38,7 @@ function make() {
           /* handedOffState */component[/* handedOffState */2],
           /* willReceiveProps */component[/* willReceiveProps */3],
           /* didMount */(function (self) {
+              console.log("mounted");
               var watcher = ReasonReact.Router[/* watchUrl */1]((function (url) {
                       return Curry._1(self[/* send */3], /* ChangeRoute */Block.__(4, [urlToRoute(url)]));
                     }));
@@ -47,7 +48,10 @@ function make() {
                           }));
             }),
           /* didUpdate */component[/* didUpdate */5],
-          /* willUnmount */component[/* willUnmount */6],
+          /* willUnmount */(function () {
+              console.log("unmounted!");
+              return /* () */0;
+            }),
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function (param) {
@@ -88,7 +92,7 @@ function make() {
                                 fetch("https://api.instagram.com/v1/users/self/media/recent/?access_token=" + (String(token) + "")).then((function (prim) {
                                             return prim.json();
                                           })).then((function (json) {
-                                          var posts = Types.Post[/* decodePosts */1](json);
+                                          var posts = Types.Post[/* decode */1](json);
                                           return Promise.resolve(Curry._1(send, /* FetchedPosts */Block.__(1, [posts])));
                                         })).catch((function () {
                                         return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
@@ -110,8 +114,11 @@ function make() {
                                     fetch("https://api.instagram.com/v1/media/" + (String(mediaId) + ("/comments?access_token=" + (String(token) + "")))).then((function (prim) {
                                                 return prim.json();
                                               })).then((function (json) {
-                                              var comments = Types.Comment[/* decodeComments */1](json);
-                                              return Promise.resolve(Curry._1(send, /* FetchedComments */Block.__(2, [comments])));
+                                              var comments = Types.Comment[/* decode */1](json);
+                                              return Promise.resolve(Curry._1(send, /* FetchedComments */Block.__(2, [
+                                                                mediaId,
+                                                                comments
+                                                              ])));
                                             })).catch((function () {
                                             return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
                                           }));
@@ -124,8 +131,32 @@ function make() {
                                   action[0]
                                 ]]);
                   case 2 : 
-                      console.log(action[0]);
-                      return /* NoUpdate */0;
+                      var comments = action[1];
+                      var postId = action[0];
+                      if (typeof state === "number") {
+                        return /* NoUpdate */0;
+                      } else {
+                        var posts = Belt_List.map(state[1], (function (p) {
+                                var match = p[/* id */0] === postId;
+                                if (match) {
+                                  return /* record */[
+                                          /* id */p[/* id */0],
+                                          /* caption */p[/* caption */1],
+                                          /* images */p[/* images */2],
+                                          /* likes */p[/* likes */3],
+                                          /* num_comments */p[/* num_comments */4],
+                                          /* user_has_liked */p[/* user_has_liked */5],
+                                          /* comments */comments
+                                        ];
+                                } else {
+                                  return p;
+                                }
+                              }));
+                        return /* Update */Block.__(0, [/* Loaded */[
+                                    state[0],
+                                    posts
+                                  ]]);
+                      }
                   case 3 : 
                       var like = action[1];
                       var post = action[0];

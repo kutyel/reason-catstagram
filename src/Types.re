@@ -1,15 +1,21 @@
+type route =
+  | Base
+  | Detail(string);
+
+let decode = (from, json) =>
+  Json.Decode.(json |> field("data", list(from)));
+
 module Caption = {
   type t = {
     text: string /* description */
   };
-
   let fromJson = json => Json.Decode.{text: json |> field("text", string)};
 };
+
 module Num = {
   type t = {
     count: int /* count */
   };
-
   let fromJson = json => Json.Decode.{count: json |> field("count", int)};
 };
 
@@ -17,13 +23,11 @@ module Resolution = {
   type t = {
     url: string /* image */
   };
-
   let fromJson = json => Json.Decode.{url: json |> field("url", string)};
 };
 
 module Images = {
   type t = {standard_resolution: Resolution.t};
-
   let fromJson = json =>
     Json.Decode.{
       standard_resolution:
@@ -33,7 +37,6 @@ module Images = {
 
 module From = {
   type t = {username: string};
-
   let fromJson = json =>
     Json.Decode.{username: json |> field("username", string)};
 };
@@ -45,7 +48,6 @@ module Comment = {
     text: string,
     created_time: string,
   };
-
   let fromJson = json =>
     Json.Decode.{
       id: json |> field("id", string),
@@ -53,9 +55,7 @@ module Comment = {
       created_time: json |> field("created_time", string),
       text: json |> field("text", string),
     };
-
-  let decodeComments = json =>
-    Json.Decode.(json |> field("data", list(fromJson)));
+  let decode = decode(fromJson);
 };
 
 module Post = {
@@ -68,7 +68,6 @@ module Post = {
     user_has_liked: bool,
     comments: list(Comment.t),
   };
-
   let fromJson = json =>
     Json.Decode.{
       id: json |> field("id", string),
@@ -79,11 +78,5 @@ module Post = {
       user_has_liked: json |> field("user_has_liked", bool),
       comments: [],
     };
-
-  let decodePosts = json =>
-    Json.Decode.(json |> field("data", list(fromJson)));
+  let decode = decode(fromJson);
 };
-
-type route =
-  | Base
-  | Detail(string);
