@@ -1,11 +1,9 @@
 let component = ReasonReact.statelessComponent("Single");
 
-open Types;
-
 let make = (~posts, ~postId, ~onLike, ~onLink, _children) => {
   ...component,
   render: _self => {
-    let post = posts->Belt.List.getBy(({id}) => id == postId);
+    let post = posts->Belt.List.getBy(({Types.Post.id}) => id == postId);
     switch (post) {
     | None => <Error />
     | Some(post) =>

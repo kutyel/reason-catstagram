@@ -1,34 +1,87 @@
-type caption = {
-  text: string /* description */
+module Caption = {
+  type t = {
+    text: string /* description */
+  };
+
+  let fromJson = json => Json.Decode.{text: json |> field("text", string)};
+};
+module Num = {
+  type t = {
+    count: int /* count */
+  };
+
+  let fromJson = json => Json.Decode.{count: json |> field("count", int)};
 };
 
-type num = {
-  count: int /* count */
+module Resolution = {
+  type t = {
+    url: string /* image */
+  };
+
+  let fromJson = json => Json.Decode.{url: json |> field("url", string)};
 };
 
-type resolution = {
-  url: string /* image */
+module Images = {
+  type t = {standard_resolution: Resolution.t};
+
+  let fromJson = json =>
+    Json.Decode.{
+      standard_resolution:
+        json |> field("standard_resolution", Resolution.fromJson),
+    };
 };
 
-type images = {standard_resolution: resolution};
+module From = {
+  type t = {username: string};
 
-type from = {username: string};
-
-type comment = {
-  id: string,
-  from,
-  text: string,
-  created_time: string,
+  let fromJson = json =>
+    Json.Decode.{username: json |> field("username", string)};
 };
 
-type post = {
-  id: string,
-  caption,
-  images,
-  likes: num,
-  num_comments: num,
-  user_has_liked: bool,
-  comments: list(comment),
+module Comment = {
+  type t = {
+    id: string,
+    from: From.t,
+    text: string,
+    created_time: string,
+  };
+
+  let fromJson = json =>
+    Json.Decode.{
+      id: json |> field("id", string),
+      from: json |> field("from", From.fromJson),
+      created_time: json |> field("created_time", string),
+      text: json |> field("text", string),
+    };
+
+  let decodeComments = json =>
+    Json.Decode.(json |> field("data", list(fromJson)));
+};
+
+module Post = {
+  type t = {
+    id: string,
+    caption: Caption.t,
+    images: Images.t,
+    likes: Num.t,
+    num_comments: Num.t,
+    user_has_liked: bool,
+    comments: list(Comment.t),
+  };
+
+  let fromJson = json =>
+    Json.Decode.{
+      id: json |> field("id", string),
+      caption: json |> field("caption", Caption.fromJson),
+      images: json |> field("images", Images.fromJson),
+      likes: json |> field("likes", Num.fromJson),
+      num_comments: json |> field("comments", Num.fromJson),
+      user_has_liked: json |> field("user_has_liked", bool),
+      comments: [],
+    };
+
+  let decodePosts = json =>
+    Json.Decode.(json |> field("data", list(fromJson)));
 };
 
 type route =
