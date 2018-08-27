@@ -7,7 +7,7 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.statelessComponent("Post");
 
-function make(post, onLike, onLink, _) {
+function make(post, onLike, onClick, _) {
   return /* record */[
           /* debugName */component[/* debugName */0],
           /* reactClassInternal */component[/* reactClassInternal */1],
@@ -22,17 +22,13 @@ function make(post, onLike, onLink, _) {
               var user_has_liked = post[/* user_has_liked */5];
               var id = post[/* id */0];
               var likes = String(post[/* likes */3][/* count */0]);
-              var onClick = function (e) {
-                e.preventDefault();
-                return Curry._1(onLink, /* Detail */[id]);
-              };
               return React.createElement("figure", {
                           className: "grid-figure"
                         }, React.createElement("div", {
                               className: "grid-photo-wrap"
                             }, React.createElement("a", {
                                   href: "/view/" + (String(id) + ""),
-                                  onClick: onClick
+                                  onClick: Curry._1(onClick, /* Detail */[id])
                                 }, React.createElement("img", {
                                       className: "grid-photo",
                                       alt: id,
@@ -47,7 +43,7 @@ function make(post, onLike, onLink, _) {
                                     }, "♥ " + (String(likes) + "")), React.createElement("a", {
                                       className: "button",
                                       href: "/view/" + (String(id) + ""),
-                                      onClick: onClick
+                                      onClick: Curry._1(onClick, /* Detail */[id])
                                     }, React.createElement("span", {
                                           className: "comment-count"
                                         }, React.createElement("span", {

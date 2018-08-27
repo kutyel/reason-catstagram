@@ -10,7 +10,7 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.statelessComponent("Single");
 
-function make(posts, postId, onLike, onLink, _) {
+function make(posts, postId, onLike, onClick, _) {
   return /* record */[
           /* debugName */component[/* debugName */0],
           /* reactClassInternal */component[/* reactClassInternal */1],
@@ -29,7 +29,7 @@ function make(posts, postId, onLike, onLink, _) {
                 var post$1 = post;
                 return React.createElement("div", {
                             className: "single-photo"
-                          }, ReasonReact.element(undefined, undefined, Post.make(post$1, onLike, onLink, /* array */[])), ReasonReact.element(undefined, undefined, Comments.make(post$1[/* comments */6], /* array */[])));
+                          }, ReasonReact.element(undefined, undefined, Post.make(post$1, onLike, onClick, /* array */[])), ReasonReact.element(undefined, undefined, Comments.make(post$1[/* comments */6], /* array */[])));
               } else {
                 return ReasonReact.element(undefined, undefined, $$Error.make(/* array */[]));
               }

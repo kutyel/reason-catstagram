@@ -38,7 +38,6 @@ function make() {
           /* handedOffState */component[/* handedOffState */2],
           /* willReceiveProps */component[/* willReceiveProps */3],
           /* didMount */(function (self) {
-              console.log("mounted");
               var watcher = ReasonReact.Router[/* watchUrl */1]((function (url) {
                       return Curry._1(self[/* send */3], /* ChangeRoute */Block.__(4, [urlToRoute(url)]));
                     }));
@@ -48,17 +47,15 @@ function make() {
                           }));
             }),
           /* didUpdate */component[/* didUpdate */5],
-          /* willUnmount */(function () {
-              console.log("unmounted!");
-              return /* () */0;
-            }),
+          /* willUnmount */component[/* willUnmount */6],
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function (param) {
               var send = param[/* send */3];
               var state = param[/* state */1];
-              var onLink = function (id) {
-                return Curry._1(send, /* ChangeRoute */Block.__(4, [id]));
+              var onClick = function (route, e) {
+                e.preventDefault();
+                return Curry._1(send, /* ChangeRoute */Block.__(4, [route]));
               };
               var onLike = function (post, like) {
                 return Curry._1(send, /* Like */Block.__(3, [
@@ -72,10 +69,13 @@ function make() {
               } else {
                 var posts = state[1];
                 var route = state[0];
-                tmp = route ? ReasonReact.element(undefined, undefined, Single.make(posts, route[0], onLike, onLink, /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, onLike, onLink, /* array */[]));
+                tmp = route ? ReasonReact.element(undefined, undefined, Single.make(posts, route[0], onLike, onClick, /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, onLike, onClick, /* array */[]));
               }
               return React.createElement("div", undefined, React.createElement("h1", undefined, React.createElement("a", {
-                                  href: "/"
+                                  href: "/",
+                                  onClick: (function (param) {
+                                      return onClick(/* Base */0, param);
+                                    })
                                 }, "Catstagram")), tmp);
             }),
           /* initialState */(function () {
@@ -108,7 +108,7 @@ function make() {
                   case 0 : 
                       var mediaId = action[0];
                       return /* UpdateWithSideEffects */Block.__(2, [
-                                /* Loading */1,
+                                state,
                                 (function (param) {
                                     var send = param[/* send */3];
                                     fetch("https://api.instagram.com/v1/media/" + (String(mediaId) + ("/comments?access_token=" + (String(token) + "")))).then((function (prim) {
@@ -188,9 +188,24 @@ function make() {
                                     route,
                                     state[1]
                                   ],
-                                (function (self) {
+                                (function (param) {
+                                    var state = param[/* state */1];
                                     if (route) {
-                                      return Curry._1(self[/* send */3], /* FetchComments */Block.__(0, [route[0]]));
+                                      var id = route[0];
+                                      var tmp;
+                                      if (typeof state === "number") {
+                                        tmp = true;
+                                      } else {
+                                        var p = Belt_List.getBy(state[1], (function (p) {
+                                                return p[/* id */0] === id;
+                                              }));
+                                        tmp = p !== undefined ? Belt_List.length(p[/* comments */6]) === 0 : true;
+                                      }
+                                      if (tmp) {
+                                        return Curry._1(param[/* send */3], /* FetchComments */Block.__(0, [id]));
+                                      } else {
+                                        return /* () */0;
+                                      }
                                     } else {
                                       return /* () */0;
                                     }

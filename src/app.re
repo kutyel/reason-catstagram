@@ -26,10 +26,7 @@ let urlToRoute = url =>
 let make = _children => {
   ...component,
   initialState: () => Loading,
-  /* TODO: remove this once sure we're not re-rendering app again and again... */
-  willUnmount: _self => Js.log("unmounted!"),
   didMount: self => {
-    Js.log("mounted");
     let watcher =
       ReasonReact.Router.watchUrl(url =>
         self.send(ChangeRoute(urlToRoute(url)))
@@ -62,7 +59,7 @@ let make = _children => {
       )
     | FetchComments(mediaId) =>
       ReasonReact.UpdateWithSideEffects(
-        Loading,
+        state,
         (
           ({send}) =>
             Js.Promise.(
@@ -126,27 +123,45 @@ let make = _children => {
         | _ => state
         },
         (
-          self =>
+          ({state, send}) =>
             switch (route) {
-            | Detail(id) => self.send(FetchComments(id))
+            | Detail(id)
+                when
+                  switch (state) {
+                  | Loaded(_, posts) =>
+                    let p = posts->Belt.List.getBy(p => p.id == id);
+                    switch (p) {
+                    | Some(post) => Belt.List.length(post.comments) == 0
+                    | _ => true
+                    };
+                  | _ => true
+                  } =>
+              send(FetchComments(id))
             | _ => ()
             }
         ),
       )
     },
   render: ({state, send}) => {
-    let onLink = id => send(ChangeRoute(id));
+    let onClick = (route, e) => {
+      ReactEvent.Mouse.preventDefault(e);
+      send(ChangeRoute(route));
+    };
     let onLike = (post, like) => send(Like(post, like));
     <div>
-      <h1> <a href="/"> {ReasonReact.string("Catstagram")} </a> </h1>
+      <h1>
+        <a href="/" onClick={onClick(Base)}>
+          {ReasonReact.string("Catstagram")}
+        </a>
+      </h1>
       {
         switch (state) {
         | Error => <Error />
         | Loading => <Spinner />
         | Loaded(route, posts) =>
           switch (route) {
-          | Base => <Grid posts onLike onLink />
-          | Detail(postId) => <Single posts postId onLike onLink />
+          | Base => <Grid posts onLike onClick />
+          | Detail(postId) => <Single posts postId onLike onClick />
           }
         }
       }
