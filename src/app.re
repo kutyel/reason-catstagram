@@ -1,5 +1,7 @@
 module T = Types;
 
+open Belt;
+
 type state =
   | Error
   | Loading
@@ -85,7 +87,7 @@ let make = _children => {
           Loaded(
             route,
             posts
-            ->Belt.List.map(p =>
+            ->List.map(p =>
                 p == post ?
                   {
                     ...p,
@@ -112,7 +114,7 @@ let make = _children => {
       switch (state) {
       | Loaded(route, posts) =>
         let posts =
-          posts->Belt.List.map(p => p.id == postId ? {...p, comments} : p);
+          posts->List.map(p => p.id == postId ? {...p, comments} : p);
         ReasonReact.Update(Loaded(route, posts));
       | _ => ReasonReact.NoUpdate
       }
@@ -129,9 +131,9 @@ let make = _children => {
                 when
                   switch (state) {
                   | Loaded(_, posts) =>
-                    let p = posts->Belt.List.getBy(p => p.id == id);
+                    let p = posts->List.getBy(p => p.id == id);
                     switch (p) {
-                    | Some(post) => Belt.List.length(post.comments) == 0
+                    | Some(post) => List.length(post.comments) == 0
                     | _ => true
                     };
                   | _ => true
