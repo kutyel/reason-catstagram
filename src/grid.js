@@ -33,6 +33,9 @@ function make(posts, onLike, onClick, _) {
         ];
 }
 
+var B = 0;
+
 exports.component = component;
+exports.B = B;
 exports.make = make;
 /* component Not a pure module */

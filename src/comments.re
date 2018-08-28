@@ -1,6 +1,6 @@
 let component = ReasonReact.statelessComponent("Comments");
 
-open Belt;
+module B = Belt;
 
 let make = (~comments, _children) => {
   ...component,
@@ -9,7 +9,7 @@ let make = (~comments, _children) => {
       <div className="comments-list">
         {
           comments
-          ->Belt.List.map(({Types.Comment.id, text, from: {username}}) =>
+          ->B.List.map(({Types.Comment.id, text, from: {username}}) =>
               <div className="comment" key=id>
                 <p>
                   <strong> {ReasonReact.string(username)} </strong>
@@ -20,7 +20,7 @@ let make = (~comments, _children) => {
                 </p>
               </div>
             )
-          |> List.toArray
+          |> B.List.toArray
           |> ReasonReact.array
         }
       </div>

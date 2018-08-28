@@ -22,14 +22,14 @@ function make(posts, postId, onLike, onClick, _) {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function () {
-              var post = Belt_List.getBy(posts, (function (param) {
+              var match = Belt_List.getBy(posts, (function (param) {
                       return param[/* id */0] === postId;
                     }));
-              if (post !== undefined) {
-                var post$1 = post;
+              if (match !== undefined) {
+                var post = match;
                 return React.createElement("div", {
                             className: "single-photo"
-                          }, ReasonReact.element(undefined, undefined, Post.make(post$1, onLike, onClick, /* array */[])), ReasonReact.element(undefined, undefined, Comments.make(post$1[/* comments */6], /* array */[])));
+                          }, ReasonReact.element(undefined, undefined, Post.make(post, onLike, onClick, /* array */[])), ReasonReact.element(undefined, undefined, Comments.make(post[/* comments */6], /* array */[])));
               } else {
                 return ReasonReact.element(undefined, undefined, $$Error.make(/* array */[]));
               }
