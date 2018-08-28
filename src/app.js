@@ -107,9 +107,7 @@ function make() {
                 switch (action.tag | 0) {
                   case 0 : 
                       var mediaId = action[0];
-                      return /* UpdateWithSideEffects */Block.__(2, [
-                                state,
-                                (function (param) {
+                      return /* SideEffects */Block.__(1, [(function (param) {
                                     var send = param[/* send */3];
                                     fetch("https://api.instagram.com/v1/media/" + (String(mediaId) + ("/comments?access_token=" + (String(token) + "")))).then((function (prim) {
                                                 return prim.json();
@@ -123,8 +121,7 @@ function make() {
                                             return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
                                           }));
                                     return /* () */0;
-                                  })
-                              ]);
+                                  })]);
                   case 1 : 
                       return /* Update */Block.__(0, [/* Loaded */[
                                   urlToRoute(ReasonReact.Router[/* dangerouslyGetInitialUrl */3](/* () */0)),
@@ -136,25 +133,24 @@ function make() {
                       if (typeof state === "number") {
                         return /* NoUpdate */0;
                       } else {
-                        var posts = Belt_List.map(state[1], (function (p) {
-                                var match = p[/* id */0] === postId;
-                                if (match) {
-                                  return /* record */[
-                                          /* id */p[/* id */0],
-                                          /* caption */p[/* caption */1],
-                                          /* images */p[/* images */2],
-                                          /* likes */p[/* likes */3],
-                                          /* num_comments */p[/* num_comments */4],
-                                          /* user_has_liked */p[/* user_has_liked */5],
-                                          /* comments */comments
-                                        ];
-                                } else {
-                                  return p;
-                                }
-                              }));
                         return /* Update */Block.__(0, [/* Loaded */[
                                     state[0],
-                                    posts
+                                    Belt_List.map(state[1], (function (p) {
+                                            var match = p[/* id */0] === postId;
+                                            if (match) {
+                                              return /* record */[
+                                                      /* id */p[/* id */0],
+                                                      /* caption */p[/* caption */1],
+                                                      /* images */p[/* images */2],
+                                                      /* likes */p[/* likes */3],
+                                                      /* num_comments */p[/* num_comments */4],
+                                                      /* user_has_liked */p[/* user_has_liked */5],
+                                                      /* comments */comments
+                                                    ];
+                                            } else {
+                                              return p;
+                                            }
+                                          }))
                                   ]]);
                       }
                   case 3 : 
@@ -194,12 +190,12 @@ function make() {
                                       var id = route[0];
                                       var tmp;
                                       if (typeof state === "number") {
-                                        tmp = true;
+                                        tmp = false;
                                       } else {
-                                        var p = Belt_List.getBy(state[1], (function (p) {
+                                        var match = Belt_List.getBy(state[1], (function (p) {
                                                 return p[/* id */0] === id;
                                               }));
-                                        tmp = p !== undefined ? Belt_List.length(p[/* comments */6]) === 0 : true;
+                                        tmp = match !== undefined && !match[/* comments */6] ? true : false;
                                       }
                                       if (tmp) {
                                         return Curry._1(param[/* send */3], /* FetchComments */Block.__(0, [id]));
@@ -219,8 +215,11 @@ function make() {
         ];
 }
 
+var B = 0;
+
 var T = 0;
 
+exports.B = B;
 exports.T = T;
 exports.component = component;
 exports.token = token;

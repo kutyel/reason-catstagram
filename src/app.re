@@ -1,6 +1,5 @@
+module B = Belt;
 module T = Types;
-
-open Belt;
 
 type state =
   | Error
@@ -60,8 +59,7 @@ let make = _children => {
         ),
       )
     | FetchComments(mediaId) =>
-      ReasonReact.UpdateWithSideEffects(
-        state,
+      ReasonReact.SideEffects(
         (
           ({send}) =>
             Js.Promise.(
@@ -86,18 +84,17 @@ let make = _children => {
         | Loaded(route, posts) =>
           Loaded(
             route,
-            posts
-            ->List.map(p =>
-                p == post ?
-                  {
-                    ...p,
-                    user_has_liked: like,
-                    likes: {
-                      count: p.likes.count + (like ? 1 : (-1)),
-                    },
-                  } :
-                  p
-              ),
+            B.List.map(posts, p =>
+              p == post ?
+                {
+                  ...p,
+                  user_has_liked: like,
+                  likes: {
+                    count: p.likes.count + (like ? 1 : (-1)),
+                  },
+                } :
+                p
+            ),
           )
         | _ => state
         },
@@ -113,9 +110,12 @@ let make = _children => {
     | FetchedComments(postId, comments) =>
       switch (state) {
       | Loaded(route, posts) =>
-        let posts =
-          posts->List.map(p => p.id == postId ? {...p, comments} : p);
-        ReasonReact.Update(Loaded(route, posts));
+        ReasonReact.Update(
+          Loaded(
+            route,
+            posts->B.List.map(p => p.id == postId ? {...p, comments} : p),
+          ),
+        )
       | _ => ReasonReact.NoUpdate
       }
     | ChangeRoute(route) =>
@@ -131,12 +131,11 @@ let make = _children => {
                 when
                   switch (state) {
                   | Loaded(_, posts) =>
-                    let p = posts->List.getBy(p => p.id == id);
-                    switch (p) {
-                    | Some(post) => List.length(post.comments) == 0
-                    | _ => true
-                    };
-                  | _ => true
+                    switch (posts->B.List.getBy(p => p.id == id)) {
+                    | Some({comments: []}) => true
+                    | _ => false
+                    }
+                  | _ => false
                   } =>
               send(FetchComments(id))
             | _ => ()
