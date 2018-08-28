@@ -1,16 +1,14 @@
 let component = ReasonReact.statelessComponent("Grid");
 
-module B = Belt;
-
-let make = (~posts, ~onLike, ~onClick, _children) => {
+let make = (~posts, ~onLike, ~navigate, _children) => {
   ...component,
   render: _self =>
     <div className="photo-grid">
       {
-        B.List.map(posts, post =>
-          <Post key={post.Types.Post.id} post onLike onClick />
+        List.map(posts, post =>
+          <Post key={post.Types.Post.id} post onLike navigate />
         )
-        |> B.List.toArray
+        |> List.toArray
         |> ReasonReact.array
       }
     </div>,

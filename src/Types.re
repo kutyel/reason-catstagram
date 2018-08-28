@@ -1,6 +1,20 @@
-type route =
-  | Base
-  | Detail(string);
+module Route = {
+  type t =
+    | Base
+    | Detail(string);
+
+  let urlToRoute = url =>
+    switch (ReasonReact.Router.(url.path)) {
+    | ["view", postId] => Detail(postId)
+    | _ => Base
+    };
+
+  let toUrl = url =>
+    switch (url) {
+    | Detail(postId) => {j|/view/$postId|j}
+    | Base => "/"
+    };
+};
 
 let decode = (from, json) =>
   Json.Decode.(json |> field("data", list(from)));

@@ -3,6 +3,33 @@
 
 var Json_decode = require("@glennsl/bs-json/src/Json_decode.bs.js");
 
+function urlToRoute(url) {
+  var match = url[/* path */0];
+  if (match && match[0] === "view") {
+    var match$1 = match[1];
+    if (match$1 && !match$1[1]) {
+      return /* Detail */[match$1[0]];
+    } else {
+      return /* Base */0;
+    }
+  } else {
+    return /* Base */0;
+  }
+}
+
+function toUrl(url) {
+  if (url) {
+    return "/view/" + (String(url[0]) + "");
+  } else {
+    return "/";
+  }
+}
+
+var Route = /* module */[
+  /* urlToRoute */urlToRoute,
+  /* toUrl */toUrl
+];
+
 function decode(from, json) {
   return Json_decode.field("data", (function (param) {
                 return Json_decode.list(from, param);
@@ -78,6 +105,7 @@ var Post = /* module */[
   /* decode */decode$2
 ];
 
+exports.Route = Route;
 exports.decode = decode;
 exports.Caption = Caption;
 exports.Num = Num;

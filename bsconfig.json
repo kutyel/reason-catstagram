@@ -14,7 +14,8 @@
     "react-jsx": 2
   },
   "bsc-flags": [
-    "-bs-super-errors"
+    "-bs-super-errors",
+    "-open Belt"
   ],
   "refmt": 3,
   "package-specs": {

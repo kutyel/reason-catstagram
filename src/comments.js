@@ -50,9 +50,6 @@ function make(comments, _) {
         ];
 }
 
-var B = 0;
-
 exports.component = component;
-exports.B = B;
 exports.make = make;
 /* component Not a pure module */
