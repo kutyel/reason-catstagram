@@ -17,20 +17,6 @@ var component = ReasonReact.reducerComponent("App");
 
 var token = (process.env.API_TOKEN);
 
-function urlToRoute(url) {
-  var match = url[/* path */0];
-  if (match && match[0] === "view") {
-    var match$1 = match[1];
-    if (match$1 && !match$1[1]) {
-      return /* Detail */[match$1[0]];
-    } else {
-      return /* Base */0;
-    }
-  } else {
-    return /* Base */0;
-  }
-}
-
 function make() {
   return /* record */[
           /* debugName */component[/* debugName */0],
@@ -39,7 +25,7 @@ function make() {
           /* willReceiveProps */component[/* willReceiveProps */3],
           /* didMount */(function (self) {
               var watcher = ReasonReact.Router[/* watchUrl */1]((function (url) {
-                      return Curry._1(self[/* send */3], /* ChangeRoute */Block.__(4, [urlToRoute(url)]));
+                      return Curry._1(self[/* send */3], /* ChangeRoute */Block.__(4, [Types.Route[/* urlToRoute */0](url)]));
                     }));
               Curry._1(self[/* send */3], /* FetchPosts */0);
               return Curry._1(self[/* onUnmount */4], (function () {
@@ -53,9 +39,9 @@ function make() {
           /* render */(function (param) {
               var send = param[/* send */3];
               var state = param[/* state */1];
-              var onClick = function (route, e) {
+              var navigate = function (route, e) {
                 e.preventDefault();
-                return Curry._1(send, /* ChangeRoute */Block.__(4, [route]));
+                return ReasonReact.Router[/* push */0](Types.Route[/* toUrl */1](route));
               };
               var onLike = function (post, like) {
                 return Curry._1(send, /* Like */Block.__(3, [
@@ -69,12 +55,12 @@ function make() {
               } else {
                 var posts = state[1];
                 var route = state[0];
-                tmp = route ? ReasonReact.element(undefined, undefined, Single.make(posts, route[0], onLike, onClick, /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, onLike, onClick, /* array */[]));
+                tmp = route ? ReasonReact.element(undefined, undefined, Single.make(posts, route[0], onLike, navigate, /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, onLike, navigate, /* array */[]));
               }
               return React.createElement("div", undefined, React.createElement("h1", undefined, React.createElement("a", {
                                   href: "/",
                                   onClick: (function (param) {
-                                      return onClick(/* Base */0, param);
+                                      return navigate(/* Base */0, param);
                                     })
                                 }, "Catstagram")), tmp);
             }),
@@ -124,7 +110,7 @@ function make() {
                                   })]);
                   case 1 : 
                       return /* Update */Block.__(0, [/* Loaded */[
-                                  urlToRoute(ReasonReact.Router[/* dangerouslyGetInitialUrl */3](/* () */0)),
+                                  Types.Route[/* urlToRoute */0](ReasonReact.Router[/* dangerouslyGetInitialUrl */3](/* () */0)),
                                   action[0]
                                 ]]);
                   case 2 : 
@@ -178,32 +164,30 @@ function make() {
                                           }))
                                   ]]);
                   case 4 : 
-                      var route = action[0];
                       return /* UpdateWithSideEffects */Block.__(2, [
                                 typeof state === "number" ? state : /* Loaded */[
-                                    route,
+                                    action[0],
                                     state[1]
                                   ],
                                 (function (param) {
                                     var state = param[/* state */1];
-                                    if (route) {
-                                      var id = route[0];
-                                      var tmp;
-                                      if (typeof state === "number") {
-                                        tmp = false;
-                                      } else {
-                                        var match = Belt_List.getBy(state[1], (function (p) {
+                                    if (typeof state === "number") {
+                                      return /* () */0;
+                                    } else {
+                                      var match = state[0];
+                                      if (match) {
+                                        var id = match[0];
+                                        var p = Belt_List.getBy(state[1], (function (p) {
                                                 return p[/* id */0] === id;
                                               }));
-                                        tmp = match !== undefined && !match[/* comments */6] ? true : false;
-                                      }
-                                      if (tmp) {
-                                        return Curry._1(param[/* send */3], /* FetchComments */Block.__(0, [id]));
+                                        if (p !== undefined && !p[/* comments */6]) {
+                                          return Curry._1(param[/* send */3], /* FetchComments */Block.__(0, [id]));
+                                        } else {
+                                          return /* () */0;
+                                        }
                                       } else {
                                         return /* () */0;
                                       }
-                                    } else {
-                                      return /* () */0;
                                     }
                                   })
                               ]);
@@ -215,14 +199,10 @@ function make() {
         ];
 }
 
-var B = 0;
-
 var T = 0;
 
-exports.B = B;
 exports.T = T;
 exports.component = component;
 exports.token = token;
-exports.urlToRoute = urlToRoute;
 exports.make = make;
 /* component Not a pure module */

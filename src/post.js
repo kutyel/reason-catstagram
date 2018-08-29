@@ -7,7 +7,7 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.statelessComponent("Post");
 
-function make(post, onLike, onClick, _) {
+function make(post, onLike, navigate, _) {
   return /* record */[
           /* debugName */component[/* debugName */0],
           /* reactClassInternal */component[/* reactClassInternal */1],
@@ -28,7 +28,7 @@ function make(post, onLike, onClick, _) {
                               className: "grid-photo-wrap"
                             }, React.createElement("a", {
                                   href: "/view/" + (String(id) + ""),
-                                  onClick: Curry._1(onClick, /* Detail */[id])
+                                  onClick: Curry._1(navigate, /* Detail */[id])
                                 }, React.createElement("img", {
                                       className: "grid-photo",
                                       alt: id,
@@ -43,7 +43,7 @@ function make(post, onLike, onClick, _) {
                                     }, "♥ " + (String(likes) + "")), React.createElement("a", {
                                       className: "button",
                                       href: "/view/" + (String(id) + ""),
-                                      onClick: Curry._1(onClick, /* Detail */[id])
+                                      onClick: Curry._1(navigate, /* Detail */[id])
                                     }, React.createElement("span", {
                                           className: "comment-count"
                                         }, React.createElement("span", {

@@ -1,10 +1,9 @@
-module B = Belt;
 module T = Types;
 
 type state =
   | Error
   | Loading
-  | Loaded(T.route, list(T.Post.t));
+  | Loaded(T.Route.t, list(T.Post.t));
 
 type action =
   | FetchPosts
@@ -13,16 +12,11 @@ type action =
   | FetchedPosts(list(T.Post.t))
   | FetchedComments(string, list(T.Comment.t))
   | Like(T.Post.t, bool)
-  | ChangeRoute(T.route);
+  | ChangeRoute(T.Route.t);
 
 let component = ReasonReact.reducerComponent("App");
 
 let token = [%raw "process.env.API_TOKEN"];
-let urlToRoute = url =>
-  switch (ReasonReact.Router.(url.path)) {
-  | ["view", postId] => T.Detail(postId)
-  | _ => Base
-  };
 
 let make = _children => {
   ...component,
@@ -30,7 +24,7 @@ let make = _children => {
   didMount: self => {
     let watcher =
       ReasonReact.Router.watchUrl(url =>
-        self.send(ChangeRoute(urlToRoute(url)))
+        self.send(ChangeRoute(T.Route.urlToRoute(url)))
       );
     self.send(FetchPosts);
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcher));
@@ -84,7 +78,7 @@ let make = _children => {
         | Loaded(route, posts) =>
           Loaded(
             route,
-            B.List.map(posts, p =>
+            List.map(posts, p =>
               p == post ?
                 {
                   ...p,
@@ -103,7 +97,7 @@ let make = _children => {
     | FetchedPosts(posts) =>
       ReasonReact.Update(
         Loaded(
-          urlToRoute(ReasonReact.Router.dangerouslyGetInitialUrl()),
+          T.Route.urlToRoute(ReasonReact.Router.dangerouslyGetInitialUrl()),
           posts,
         ),
       )
@@ -113,7 +107,7 @@ let make = _children => {
         ReasonReact.Update(
           Loaded(
             route,
-            posts->B.List.map(p => p.id == postId ? {...p, comments} : p),
+            posts->List.map(p => p.id == postId ? {...p, comments} : p),
           ),
         )
       | _ => ReasonReact.NoUpdate
@@ -126,32 +120,27 @@ let make = _children => {
         },
         (
           ({state, send}) =>
-            switch (route) {
-            | Detail(id)
-                when
-                  switch (state) {
-                  | Loaded(_, posts) =>
-                    switch (posts->B.List.getBy(p => p.id == id)) {
-                    | Some({comments: []}) => true
-                    | _ => false
-                    }
-                  | _ => false
-                  } =>
-              send(FetchComments(id))
+            switch (state) {
+            | Loaded(Detail(id), posts) =>
+              let p = posts->List.getBy(p => p.id === id);
+              switch (p) {
+              | Some({T.Post.comments: []}) => send(FetchComments(id))
+              | _ => ()
+              };
             | _ => ()
             }
         ),
       )
     },
   render: ({state, send}) => {
-    let onClick = (route, e) => {
+    let navigate = (route, e) => {
       ReactEvent.Mouse.preventDefault(e);
-      send(ChangeRoute(route));
+      ReasonReact.Router.push(T.Route.toUrl(route));
     };
     let onLike = (post, like) => send(Like(post, like));
     <div>
       <h1>
-        <a href="/" onClick={onClick(Base)}>
+        <a href="/" onClick={navigate(Base)}>
           {ReasonReact.string("Catstagram")}
         </a>
       </h1>
@@ -161,8 +150,8 @@ let make = _children => {
         | Loading => <Spinner />
         | Loaded(route, posts) =>
           switch (route) {
-          | Base => <Grid posts onLike onClick />
-          | Detail(postId) => <Single posts postId onLike onClick />
+          | Base => <Grid posts onLike navigate />
+          | Detail(postId) => <Single posts postId onLike navigate />
           }
         }
       }

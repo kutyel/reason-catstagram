@@ -2,7 +2,7 @@ let component = ReasonReact.statelessComponent("Post");
 
 open Types;
 
-let make = (~post, ~onLike, ~onClick, _children) => {
+let make = (~post, ~onLike, ~navigate, _children) => {
   ...component,
   render: _self => {
     let {
@@ -16,7 +16,7 @@ let make = (~post, ~onLike, ~onClick, _children) => {
     let likes = string_of_int(count);
     <figure className="grid-figure">
       <div className="grid-photo-wrap">
-        <a href={j|/view/$id|j} onClick={onClick(Detail(id))}>
+        <a href={j|/view/$id|j} onClick={navigate(Route.Detail(id))}>
           <img src=url alt=id className="grid-photo" />
         </a>
       </div>
@@ -31,7 +31,7 @@ let make = (~post, ~onLike, ~onClick, _children) => {
           <a
             className="button"
             href={j|/view/$id|j}
-            onClick={onClick(Detail(id))}>
+            onClick={navigate(Detail(id))}>
             <span className="comment-count">
               <span className="speech-bubble" />
               {ReasonReact.string(string_of_int(num_comments))}
