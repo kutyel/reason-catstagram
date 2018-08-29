@@ -122,11 +122,10 @@ let make = _children => {
           ({state, send}) =>
             switch (state) {
             | Loaded(Detail(id), posts) =>
-              let p = posts->List.getBy(p => p.id === id);
-              switch (p) {
+              switch (posts->List.getBy(p => p.id === id)) {
               | Some({T.Post.comments: []}) => send(FetchComments(id))
               | _ => ()
-              };
+              }
             | _ => ()
             }
         ),
