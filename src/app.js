@@ -25,7 +25,7 @@ function make() {
           /* willReceiveProps */component[/* willReceiveProps */3],
           /* didMount */(function (self) {
               var watcher = ReasonReact.Router[/* watchUrl */1]((function (url) {
-                      return Curry._1(self[/* send */3], /* ChangeRoute */Block.__(4, [Types.Route[/* urlToRoute */0](url)]));
+                      return Curry._1(self[/* send */3], /* ChangeRoute */Block.__(5, [Types.Route[/* urlToRoute */0](url)]));
                     }));
               Curry._1(self[/* send */3], /* FetchPosts */0);
               return Curry._1(self[/* onUnmount */4], (function () {
@@ -44,9 +44,15 @@ function make() {
                 return ReasonReact.Router[/* push */0](Types.Route[/* toUrl */1](route));
               };
               var onLike = function (post, like) {
-                return Curry._1(send, /* Like */Block.__(3, [
+                return Curry._1(send, /* Like */Block.__(4, [
                               post,
                               like
+                            ]));
+              };
+              var remove = function (postId, commentId) {
+                return Curry._1(send, /* DeleteComment */Block.__(3, [
+                              postId,
+                              commentId
                             ]));
               };
               var tmp;
@@ -55,7 +61,7 @@ function make() {
               } else {
                 var posts = state[1];
                 var route = state[0];
-                tmp = route ? ReasonReact.element(undefined, undefined, Single.make(posts, route[0], onLike, navigate, /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, onLike, navigate, /* array */[]));
+                tmp = route ? ReasonReact.element(undefined, undefined, Single.make(posts, route[0], onLike, navigate, remove, /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, onLike, navigate, /* array */[]));
               }
               return React.createElement("div", undefined, React.createElement("h1", undefined, React.createElement("a", {
                                   href: "/",
@@ -140,6 +146,34 @@ function make() {
                                   ]]);
                       }
                   case 3 : 
+                      var commentId = action[1];
+                      var postId$1 = action[0];
+                      if (typeof state === "number") {
+                        return /* NoUpdate */0;
+                      } else {
+                        return /* Update */Block.__(0, [/* Loaded */[
+                                    state[0],
+                                    Belt_List.map(state[1], (function (p) {
+                                            var match = p[/* id */0] === postId$1;
+                                            if (match) {
+                                              return /* record */[
+                                                      /* id */p[/* id */0],
+                                                      /* caption */p[/* caption */1],
+                                                      /* images */p[/* images */2],
+                                                      /* likes */p[/* likes */3],
+                                                      /* num_comments */p[/* num_comments */4],
+                                                      /* user_has_liked */p[/* user_has_liked */5],
+                                                      /* comments */Belt_List.keep(p[/* comments */6], (function (c) {
+                                                              return c[/* id */0] !== commentId;
+                                                            }))
+                                                    ];
+                                            } else {
+                                              return p;
+                                            }
+                                          }))
+                                  ]]);
+                      }
+                  case 4 : 
                       var like = action[1];
                       var post = action[0];
                       return /* Update */Block.__(0, [typeof state === "number" ? state : /* Loaded */[
@@ -163,7 +197,7 @@ function make() {
                                             }
                                           }))
                                   ]]);
-                  case 4 : 
+                  case 5 : 
                       return /* UpdateWithSideEffects */Block.__(2, [
                                 typeof state === "number" ? state : /* Loaded */[
                                     action[0],

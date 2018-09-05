@@ -11,6 +11,7 @@ type action =
   | FailedToFetch
   | FetchedPosts(list(T.Post.t))
   | FetchedComments(string, list(T.Comment.t))
+  | DeleteComment(string, string)
   | Like(T.Post.t, bool)
   | ChangeRoute(T.Route.t);
 
@@ -112,6 +113,25 @@ let make = _children => {
         )
       | _ => ReasonReact.NoUpdate
       }
+    | DeleteComment(postId, commentId) =>
+      switch (state) {
+      | Loaded(route, posts) =>
+        ReasonReact.Update(
+          Loaded(
+            route,
+            posts
+            ->List.map(p =>
+                p.id == postId ?
+                  {
+                    ...p,
+                    comments: p.comments->List.keep(c => c.id != commentId),
+                  } :
+                  p
+              ),
+          ),
+        )
+      | _ => ReasonReact.NoUpdate
+      }
     | ChangeRoute(route) =>
       ReasonReact.UpdateWithSideEffects(
         switch (state) {
@@ -137,6 +157,8 @@ let make = _children => {
       ReasonReact.Router.push(T.Route.toUrl(route));
     };
     let onLike = (post, like) => send(Like(post, like));
+    let remove = (postId, commentId) =>
+      send(DeleteComment(postId, commentId));
     <div>
       <h1>
         <a href="/" onClick={navigate(Base)}>
@@ -150,7 +172,7 @@ let make = _children => {
         | Loaded(route, posts) =>
           switch (route) {
           | Base => <Grid posts onLike navigate />
-          | Detail(postId) => <Single posts postId onLike navigate />
+          | Detail(postId) => <Single posts postId onLike navigate remove />
           }
         }
       }
