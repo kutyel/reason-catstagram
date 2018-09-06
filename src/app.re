@@ -13,7 +13,7 @@ let make = _children => {
     self.send(FetchPosts);
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcher));
   },
-  reducer: Reducers.f,
+  reducer: Reducers.appReducer,
   render: ({state, send}) => {
     let navigate = (route, e) => {
       ReactEvent.Mouse.preventDefault(e);

@@ -2,6 +2,8 @@
 
 My very first ReasonReact app, of course, about cats! 🐈
 
+![catstagram](catstagram.png)
+
 ## DevTools (vscode)
 
 - Remove all prior reason plugins

@@ -59,7 +59,7 @@ function make() {
               return /* Loading */1;
             }),
           /* retainedProps */component[/* retainedProps */11],
-          /* reducer */Reducers.f,
+          /* reducer */Reducers.appReducer,
           /* jsElementWrapped */component[/* jsElementWrapped */13]
         ];
 }

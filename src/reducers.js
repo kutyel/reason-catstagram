@@ -10,7 +10,7 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var token = (process.env.API_TOKEN);
 
-function f(action, state) {
+function appReducer(action, state) {
   if (typeof action === "number") {
     if (action === 0) {
       return /* UpdateWithSideEffects */Block.__(2, [
@@ -167,5 +167,5 @@ function f(action, state) {
 }
 
 exports.token = token;
-exports.f = f;
+exports.appReducer = appReducer;
 /* token Not a pure module */

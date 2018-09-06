@@ -2,7 +2,7 @@ open Types;
 
 let token = [%raw "process.env.API_TOKEN"];
 
-let f = (action, state) =>
+let appReducer = (action, state) =>
   switch (action) {
   | FetchPosts =>
     ReasonReact.UpdateWithSideEffects(
