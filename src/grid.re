@@ -1,12 +1,12 @@
 let component = ReasonReact.statelessComponent("Grid");
 
-let make = (~posts, ~onLike, ~navigate, _children) => {
+let make = (~posts, ~send, ~navigate, _children) => {
   ...component,
   render: _self =>
     <div className="photo-grid">
       {
         List.map(posts, post =>
-          <Post key={post.Types.Post.id} post onLike navigate />
+          <Post key={post.Types.Post.id} post send navigate />
         )
         |> List.toArray
         |> ReasonReact.array

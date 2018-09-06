@@ -1,6 +1,6 @@
 let component = ReasonReact.statelessComponent("Comments");
 
-let make = (~comments, ~remove, _children) => {
+let make = (~comments, ~send, ~postId, _children) => {
   ...component,
   render: _self =>
     <div className="comments">
@@ -13,7 +13,8 @@ let make = (~comments, ~remove, _children) => {
                   <strong> {ReasonReact.string(username)} </strong>
                   {ReasonReact.string(text)}
                   <button
-                    className="remove-comment" onClick={_e => remove(id)}>
+                    className="remove-comment"
+                    onClick={_e => send(Types.DeleteComment(postId, id))}>
                     {ReasonReact.string({js|✖️|js})}
                   </button>
                 </p>

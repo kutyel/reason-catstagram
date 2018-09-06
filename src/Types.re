@@ -94,3 +94,18 @@ module Post = {
     };
   let decode = decode(fromJson);
 };
+
+type state =
+  | Error
+  | Loading
+  | Loaded(Route.t, list(Post.t));
+
+type action =
+  | FetchPosts
+  | FetchComments(string)
+  | FailedToFetch
+  | FetchedPosts(list(Post.t))
+  | FetchedComments(string, list(Comment.t))
+  | DeleteComment(string, string)
+  | Like(Post.t, bool)
+  | ChangeRoute(Route.t);

@@ -2,7 +2,7 @@ let component = ReasonReact.statelessComponent("Post");
 
 open Types;
 
-let make = (~post, ~onLike, ~navigate, _children) => {
+let make = (~post, ~send, ~navigate, _children) => {
   ...component,
   render: _self => {
     let {
@@ -24,7 +24,7 @@ let make = (~post, ~onLike, ~navigate, _children) => {
         <p> {ReasonReact.string(text)} </p>
         <div className="control-buttons">
           <button
-            onClick={_e => onLike(post, !user_has_liked)}
+            onClick={_e => send(Like(post, !user_has_liked))}
             className={user_has_liked ? "liked" : ""}>
             {ReasonReact.string({j|♥ $likes|j})}
           </button>

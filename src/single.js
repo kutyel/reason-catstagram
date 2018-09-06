@@ -2,7 +2,6 @@
 'use strict';
 
 var Post = require("./post.js");
-var Curry = require("bs-platform/lib/js/curry.js");
 var $$Error = require("./error.js");
 var React = require("react");
 var Comments = require("./comments.js");
@@ -11,7 +10,7 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.statelessComponent("Single");
 
-function make(posts, postId, onLike, navigate, remove, _) {
+function make(posts, postId, send, navigate, _) {
   return /* record */[
           /* debugName */component[/* debugName */0],
           /* reactClassInternal */component[/* reactClassInternal */1],
@@ -30,7 +29,7 @@ function make(posts, postId, onLike, navigate, remove, _) {
                 var post = match;
                 return React.createElement("div", {
                             className: "single-photo"
-                          }, ReasonReact.element(undefined, undefined, Post.make(post, onLike, navigate, /* array */[])), ReasonReact.element(undefined, undefined, Comments.make(post[/* comments */6], Curry._1(remove, postId), /* array */[])));
+                          }, ReasonReact.element(undefined, undefined, Post.make(post, send, navigate, /* array */[])), ReasonReact.element(undefined, undefined, Comments.make(post[/* comments */6], send, postId, /* array */[])));
               } else {
                 return ReasonReact.element(undefined, undefined, $$Error.make(/* array */[]));
               }

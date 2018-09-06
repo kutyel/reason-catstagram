@@ -1,14 +1,14 @@
 let component = ReasonReact.statelessComponent("Single");
 
-let make = (~posts, ~postId, ~onLike, ~navigate, ~remove, _children) => {
+let make = (~posts, ~postId, ~send, ~navigate, _children) => {
   ...component,
   render: _self =>
     switch (posts->Belt.List.getBy(({Types.Post.id}) => id == postId)) {
     | None => <Error />
     | Some(post) =>
       <div className="single-photo">
-        <Post post onLike navigate />
-        <Comments comments={post.comments} remove={remove(postId)} />
+        <Post post send navigate />
+        <Comments postId send comments={post.comments} />
       </div>
     },
 };

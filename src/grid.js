@@ -8,7 +8,7 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.statelessComponent("Grid");
 
-function make(posts, onLike, navigate, _) {
+function make(posts, send, navigate, _) {
   return /* record */[
           /* debugName */component[/* debugName */0],
           /* reactClassInternal */component[/* reactClassInternal */1],
@@ -23,7 +23,7 @@ function make(posts, onLike, navigate, _) {
               return React.createElement("div", {
                           className: "photo-grid"
                         }, Belt_List.toArray(Belt_List.map(posts, (function (post) {
-                                    return ReasonReact.element(post[/* id */0], undefined, Post.make(post, onLike, navigate, /* array */[]));
+                                    return ReasonReact.element(post[/* id */0], undefined, Post.make(post, send, navigate, /* array */[]));
                                   }))));
             }),
           /* initialState */component[/* initialState */10],

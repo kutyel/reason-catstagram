@@ -9,13 +9,10 @@ var Types = require("./Types.js");
 var React = require("react");
 var Single = require("./single.js");
 var Spinner = require("./spinner.js");
-var Caml_obj = require("bs-platform/lib/js/caml_obj.js");
-var Belt_List = require("bs-platform/lib/js/belt_List.js");
+var Reducers = require("./reducers.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.reducerComponent("App");
-
-var token = (process.env.API_TOKEN);
 
 function make() {
   return /* record */[
@@ -43,25 +40,13 @@ function make() {
                 e.preventDefault();
                 return ReasonReact.Router[/* push */0](Types.Route[/* toUrl */1](route));
               };
-              var onLike = function (post, like) {
-                return Curry._1(send, /* Like */Block.__(4, [
-                              post,
-                              like
-                            ]));
-              };
-              var remove = function (postId, commentId) {
-                return Curry._1(send, /* DeleteComment */Block.__(3, [
-                              postId,
-                              commentId
-                            ]));
-              };
               var tmp;
               if (typeof state === "number") {
                 tmp = state !== 0 ? ReasonReact.element(undefined, undefined, Spinner.make(/* array */[])) : ReasonReact.element(undefined, undefined, $$Error.make(/* array */[]));
               } else {
                 var posts = state[1];
                 var route = state[0];
-                tmp = route ? ReasonReact.element(undefined, undefined, Single.make(posts, route[0], onLike, navigate, remove, /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, onLike, navigate, /* array */[]));
+                tmp = route ? ReasonReact.element(undefined, undefined, Single.make(posts, route[0], send, navigate, /* array */[])) : ReasonReact.element(undefined, undefined, Grid.make(posts, send, navigate, /* array */[]));
               }
               return React.createElement("div", undefined, React.createElement("h1", undefined, React.createElement("a", {
                                   href: "/",
@@ -74,169 +59,11 @@ function make() {
               return /* Loading */1;
             }),
           /* retainedProps */component[/* retainedProps */11],
-          /* reducer */(function (action, state) {
-              if (typeof action === "number") {
-                if (action === 0) {
-                  return /* UpdateWithSideEffects */Block.__(2, [
-                            /* Loading */1,
-                            (function (param) {
-                                var send = param[/* send */3];
-                                fetch("https://api.instagram.com/v1/users/self/media/recent/?access_token=" + (String(token) + "")).then((function (prim) {
-                                            return prim.json();
-                                          })).then((function (json) {
-                                          var posts = Types.Post[/* decode */1](json);
-                                          return Promise.resolve(Curry._1(send, /* FetchedPosts */Block.__(1, [posts])));
-                                        })).catch((function () {
-                                        return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
-                                      }));
-                                return /* () */0;
-                              })
-                          ]);
-                } else {
-                  return /* Update */Block.__(0, [/* Error */0]);
-                }
-              } else {
-                switch (action.tag | 0) {
-                  case 0 : 
-                      var mediaId = action[0];
-                      return /* SideEffects */Block.__(1, [(function (param) {
-                                    var send = param[/* send */3];
-                                    fetch("https://api.instagram.com/v1/media/" + (String(mediaId) + ("/comments?access_token=" + (String(token) + "")))).then((function (prim) {
-                                                return prim.json();
-                                              })).then((function (json) {
-                                              var comments = Types.Comment[/* decode */1](json);
-                                              return Promise.resolve(Curry._1(send, /* FetchedComments */Block.__(2, [
-                                                                mediaId,
-                                                                comments
-                                                              ])));
-                                            })).catch((function () {
-                                            return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
-                                          }));
-                                    return /* () */0;
-                                  })]);
-                  case 1 : 
-                      return /* Update */Block.__(0, [/* Loaded */[
-                                  Types.Route[/* urlToRoute */0](ReasonReact.Router[/* dangerouslyGetInitialUrl */3](/* () */0)),
-                                  action[0]
-                                ]]);
-                  case 2 : 
-                      var comments = action[1];
-                      var postId = action[0];
-                      if (typeof state === "number") {
-                        return /* NoUpdate */0;
-                      } else {
-                        return /* Update */Block.__(0, [/* Loaded */[
-                                    state[0],
-                                    Belt_List.map(state[1], (function (p) {
-                                            var match = p[/* id */0] === postId;
-                                            if (match) {
-                                              return /* record */[
-                                                      /* id */p[/* id */0],
-                                                      /* caption */p[/* caption */1],
-                                                      /* images */p[/* images */2],
-                                                      /* likes */p[/* likes */3],
-                                                      /* num_comments */p[/* num_comments */4],
-                                                      /* user_has_liked */p[/* user_has_liked */5],
-                                                      /* comments */comments
-                                                    ];
-                                            } else {
-                                              return p;
-                                            }
-                                          }))
-                                  ]]);
-                      }
-                  case 3 : 
-                      var commentId = action[1];
-                      var postId$1 = action[0];
-                      if (typeof state === "number") {
-                        return /* NoUpdate */0;
-                      } else {
-                        return /* Update */Block.__(0, [/* Loaded */[
-                                    state[0],
-                                    Belt_List.map(state[1], (function (p) {
-                                            var match = p[/* id */0] === postId$1;
-                                            if (match) {
-                                              return /* record */[
-                                                      /* id */p[/* id */0],
-                                                      /* caption */p[/* caption */1],
-                                                      /* images */p[/* images */2],
-                                                      /* likes */p[/* likes */3],
-                                                      /* num_comments */p[/* num_comments */4],
-                                                      /* user_has_liked */p[/* user_has_liked */5],
-                                                      /* comments */Belt_List.keep(p[/* comments */6], (function (c) {
-                                                              return c[/* id */0] !== commentId;
-                                                            }))
-                                                    ];
-                                            } else {
-                                              return p;
-                                            }
-                                          }))
-                                  ]]);
-                      }
-                  case 4 : 
-                      var like = action[1];
-                      var post = action[0];
-                      return /* Update */Block.__(0, [typeof state === "number" ? state : /* Loaded */[
-                                    state[0],
-                                    Belt_List.map(state[1], (function (p) {
-                                            var match = Caml_obj.caml_equal(p, post);
-                                            if (match) {
-                                              return /* record */[
-                                                      /* id */p[/* id */0],
-                                                      /* caption */p[/* caption */1],
-                                                      /* images */p[/* images */2],
-                                                      /* likes : record */[/* count */p[/* likes */3][/* count */0] + (
-                                                          like ? 1 : -1
-                                                        ) | 0],
-                                                      /* num_comments */p[/* num_comments */4],
-                                                      /* user_has_liked */like,
-                                                      /* comments */p[/* comments */6]
-                                                    ];
-                                            } else {
-                                              return p;
-                                            }
-                                          }))
-                                  ]]);
-                  case 5 : 
-                      return /* UpdateWithSideEffects */Block.__(2, [
-                                typeof state === "number" ? state : /* Loaded */[
-                                    action[0],
-                                    state[1]
-                                  ],
-                                (function (param) {
-                                    var state = param[/* state */1];
-                                    if (typeof state === "number") {
-                                      return /* () */0;
-                                    } else {
-                                      var match = state[0];
-                                      if (match) {
-                                        var id = match[0];
-                                        var match$1 = Belt_List.getBy(state[1], (function (p) {
-                                                return p[/* id */0] === id;
-                                              }));
-                                        if (match$1 !== undefined && !match$1[/* comments */6]) {
-                                          return Curry._1(param[/* send */3], /* FetchComments */Block.__(0, [id]));
-                                        } else {
-                                          return /* () */0;
-                                        }
-                                      } else {
-                                        return /* () */0;
-                                      }
-                                    }
-                                  })
-                              ]);
-                  
-                }
-              }
-            }),
+          /* reducer */Reducers.f,
           /* jsElementWrapped */component[/* jsElementWrapped */13]
         ];
 }
 
-var T = 0;
-
-exports.T = T;
 exports.component = component;
-exports.token = token;
 exports.make = make;
 /* component Not a pure module */
