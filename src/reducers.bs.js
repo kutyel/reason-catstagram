@@ -3,7 +3,7 @@
 
 var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
-var Types = require("./Types.js");
+var Types = require("./Types.bs.js");
 var Caml_obj = require("bs-platform/lib/js/caml_obj.js");
 var Belt_List = require("bs-platform/lib/js/belt_List.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");

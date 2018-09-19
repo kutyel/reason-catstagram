@@ -1,10 +1,8 @@
 {
   "name": "Catstagram",
-  "sources": [
-    {
-      "dir": "src"
-    }
-  ],
+  "sources": {
+    "dir": "src"
+  },
   "bs-dependencies": [
     "reason-react",
     "bs-fetch",
@@ -22,5 +20,5 @@
     "module": "commonjs",
     "in-source": true
   },
-  "suffix": ".js"
+  "suffix": ".bs.js"
 }

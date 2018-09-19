@@ -1,6 +1,6 @@
 {
   "files.exclude": {
-    "**/*.js": {
+    "**/*.bs.js": {
       "when": "$(basename).re"
     }
   }
