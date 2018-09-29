@@ -31,7 +31,7 @@ API_TOKEN=xxxxxxxxxx.xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 ### TODO
-- [ ] Add comments
+- [x] Add comments
 - [x] Delete comments
 - [x] Optimize calls to API
 - [ ] Replace text with #`Hashtag`s

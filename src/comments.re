@@ -24,10 +24,10 @@ let make = (~comments, ~send, ~postId, _children) => {
           |> ReasonReact.array
         }
       </div>
-      <form className="comment-form">
-        <input type_="text" placeholder="author" />
-        <input type_="text" placeholder="comment" />
-        <input type_="submit" hidden=true />
-      </form>
+      <Form
+        handleSubmit={
+          (author, text) => send(AddComment(postId, author, text))
+        }
+      />
     </div>,
 };

@@ -85,6 +85,35 @@ let appReducer = (action, state) =>
       )
     | _ => ReasonReact.NoUpdate
     }
+  | AddComment(postId, author, comment) =>
+    switch (state) {
+    | Loaded(route, posts) =>
+      ReasonReact.Update(
+        Loaded(
+          route,
+          posts
+          ->List.map(p =>
+              p.id == postId ?
+                {
+                  ...p,
+                  comments: [
+                    {
+                      id: "0", /* TODO: fix this? */
+                      created_time: "today", /* TODO: fix this? */
+                      from: {
+                        username: author,
+                      },
+                      text: comment,
+                    },
+                    ...p.comments,
+                  ],
+                } :
+                p
+            ),
+        ),
+      )
+    | _ => ReasonReact.NoUpdate
+    }
   | DeleteComment(postId, commentId) =>
     switch (state) {
     | Loaded(route, posts) =>

@@ -22,7 +22,7 @@ function make() {
           /* willReceiveProps */component[/* willReceiveProps */3],
           /* didMount */(function (self) {
               var watcher = ReasonReact.Router[/* watchUrl */1]((function (url) {
-                      return Curry._1(self[/* send */3], /* ChangeRoute */Block.__(5, [Types.Route[/* urlToRoute */0](url)]));
+                      return Curry._1(self[/* send */3], /* ChangeRoute */Block.__(6, [Types.Route[/* urlToRoute */0](url)]));
                     }));
               Curry._1(self[/* send */3], /* FetchPosts */0);
               return Curry._1(self[/* onUnmount */4], (function () {

@@ -106,6 +106,7 @@ type action =
   | FailedToFetch
   | FetchedPosts(list(Post.t))
   | FetchedComments(string, list(Comment.t))
+  | AddComment(string, string, string)
   | DeleteComment(string, string)
   | Like(Post.t, bool)
   | ChangeRoute(Route.t);

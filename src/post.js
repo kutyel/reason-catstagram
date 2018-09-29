@@ -39,7 +39,7 @@ function make(post, send, navigate, _) {
                                 }, React.createElement("button", {
                                       className: user_has_liked ? "liked" : "",
                                       onClick: (function () {
-                                          return Curry._1(send, /* Like */Block.__(4, [
+                                          return Curry._1(send, /* Like */Block.__(5, [
                                                         post,
                                                         !user_has_liked
                                                       ]));

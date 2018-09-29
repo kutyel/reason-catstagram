@@ -82,7 +82,8 @@ function appReducer(action, state) {
                       ]]);
           }
       case 3 : 
-          var commentId = action[1];
+          var comment = action[2];
+          var author = action[1];
           var postId$1 = action[0];
           if (typeof state === "number") {
             return /* NoUpdate */0;
@@ -91,6 +92,40 @@ function appReducer(action, state) {
                         state[0],
                         Belt_List.map(state[1], (function (p) {
                                 var match = p[/* id */0] === postId$1;
+                                if (match) {
+                                  return /* record */[
+                                          /* id */p[/* id */0],
+                                          /* caption */p[/* caption */1],
+                                          /* images */p[/* images */2],
+                                          /* likes */p[/* likes */3],
+                                          /* num_comments */p[/* num_comments */4],
+                                          /* user_has_liked */p[/* user_has_liked */5],
+                                          /* comments : :: */[
+                                            /* record */[
+                                              /* id */"0",
+                                              /* from : record */[/* username */author],
+                                              /* text */comment,
+                                              /* created_time */"today"
+                                            ],
+                                            p[/* comments */6]
+                                          ]
+                                        ];
+                                } else {
+                                  return p;
+                                }
+                              }))
+                      ]]);
+          }
+      case 4 : 
+          var commentId = action[1];
+          var postId$2 = action[0];
+          if (typeof state === "number") {
+            return /* NoUpdate */0;
+          } else {
+            return /* Update */Block.__(0, [/* Loaded */[
+                        state[0],
+                        Belt_List.map(state[1], (function (p) {
+                                var match = p[/* id */0] === postId$2;
                                 if (match) {
                                   return /* record */[
                                           /* id */p[/* id */0],
@@ -109,7 +144,7 @@ function appReducer(action, state) {
                               }))
                       ]]);
           }
-      case 4 : 
+      case 5 : 
           var like = action[1];
           var post = action[0];
           return /* Update */Block.__(0, [typeof state === "number" ? state : /* Loaded */[
@@ -133,7 +168,7 @@ function appReducer(action, state) {
                                 }
                               }))
                       ]]);
-      case 5 : 
+      case 6 : 
           return /* UpdateWithSideEffects */Block.__(2, [
                     typeof state === "number" ? state : /* Loaded */[
                         action[0],
