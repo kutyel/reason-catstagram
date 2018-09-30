@@ -1,66 +1,44 @@
-type form = {
+type state = {
   author: string,
   comment: string,
 };
 
-type state = {form};
-
 type action =
-  | HandleChange(form);
+  | ChangeAuthor(string)
+  | ChangeComment(string);
 
 let component = ReasonReact.reducerComponent("Form");
 
 let make = (~handleSubmit, _children) => {
   ...component,
-  initialState: () => {
-    form: {
-      author: "",
-      comment: "",
-    },
-  },
+  initialState: () => {author: "", comment: ""},
   reducer: (action, state) =>
     switch (action) {
-    | HandleChange(form) => ReasonReact.Update({...state, form}) /* TODO: strange warning "with" */
+    | ChangeAuthor(author) => ReasonReact.Update({...state, author})
+    | ChangeComment(comment) => ReasonReact.Update({...state, comment})
     },
-  render: ({state: {form}, send}) =>
-    <form className="comment-form">
+  render: ({state: {author, comment}, send}) =>
+    <form
+      className="comment-form"
+      onSubmit={
+        e => {
+          ReactEvent.Form.preventDefault(e);
+          handleSubmit(author, comment);
+          /* TODO: reset the form here :) */
+        }
+      }>
       <input
         type_="text"
         placeholder="author"
-        value={form.author}
-        onChange={
-          event => {
-            let nextForm = {
-              ...form,
-              author: event->ReactEvent.Form.target##value,
-            };
-            send(HandleChange(nextForm));
-          }
-        }
+        value=author
+        onChange={e => send(ChangeAuthor(e->ReactEvent.Form.target##value))}
       />
       <input
         type_="text"
         placeholder="comment"
-        value={form.comment}
-        onChange={
-          event => {
-            let nextForm = {
-              ...form,
-              comment: event->ReactEvent.Form.target##value,
-            };
-            send(HandleChange(nextForm));
-          }
-        }
+        value=comment
+        onChange={e => send(ChangeComment(e->ReactEvent.Form.target##value))}
       />
-      <input
-        type_="submit"
-        hidden=true
-        onSubmit={
-          e => {
-            ReactEvent.Form.preventDefault(e);
-            handleSubmit(form.author, form.comment);
-          }
-        }
-      />
+      <input type_="submit" hidden=true />
     </form>,
 };

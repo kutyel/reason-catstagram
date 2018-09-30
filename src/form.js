@@ -21,53 +21,53 @@ function make(handleSubmit, _) {
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function (param) {
               var send = param[/* send */3];
-              var form = param[/* state */1][/* form */0];
+              var match = param[/* state */1];
+              var comment = match[/* comment */1];
+              var author = match[/* author */0];
               return React.createElement("form", {
-                          className: "comment-form"
+                          className: "comment-form",
+                          onSubmit: (function (e) {
+                              e.preventDefault();
+                              return Curry._2(handleSubmit, author, comment);
+                            })
                         }, React.createElement("input", {
                               placeholder: "author",
                               type: "text",
-                              value: form[/* author */0],
-                              onChange: (function ($$event) {
-                                  var nextForm_000 = /* author */$$event.target.value;
-                                  var nextForm_001 = /* comment */form[/* comment */1];
-                                  var nextForm = /* record */[
-                                    nextForm_000,
-                                    nextForm_001
-                                  ];
-                                  return Curry._1(send, /* HandleChange */[nextForm]);
+                              value: author,
+                              onChange: (function (e) {
+                                  return Curry._1(send, /* ChangeAuthor */Block.__(0, [e.target.value]));
                                 })
                             }), React.createElement("input", {
                               placeholder: "comment",
                               type: "text",
-                              value: form[/* comment */1],
-                              onChange: (function ($$event) {
-                                  var nextForm_000 = /* author */form[/* author */0];
-                                  var nextForm_001 = /* comment */$$event.target.value;
-                                  var nextForm = /* record */[
-                                    nextForm_000,
-                                    nextForm_001
-                                  ];
-                                  return Curry._1(send, /* HandleChange */[nextForm]);
+                              value: comment,
+                              onChange: (function (e) {
+                                  return Curry._1(send, /* ChangeComment */Block.__(1, [e.target.value]));
                                 })
                             }), React.createElement("input", {
                               hidden: true,
-                              type: "submit",
-                              onSubmit: (function (e) {
-                                  e.preventDefault();
-                                  return Curry._2(handleSubmit, form[/* author */0], form[/* comment */1]);
-                                })
+                              type: "submit"
                             }));
             }),
           /* initialState */(function () {
-              return /* record */[/* form : record */[
-                        /* author */"",
-                        /* comment */""
-                      ]];
+              return /* record */[
+                      /* author */"",
+                      /* comment */""
+                    ];
             }),
           /* retainedProps */component[/* retainedProps */11],
-          /* reducer */(function (action, _) {
-              return /* Update */Block.__(0, [/* record */[/* form */action[0]]]);
+          /* reducer */(function (action, state) {
+              if (action.tag) {
+                return /* Update */Block.__(0, [/* record */[
+                            /* author */state[/* author */0],
+                            /* comment */action[0]
+                          ]]);
+              } else {
+                return /* Update */Block.__(0, [/* record */[
+                            /* author */action[0],
+                            /* comment */state[/* comment */1]
+                          ]]);
+              }
             }),
           /* jsElementWrapped */component[/* jsElementWrapped */13]
         ];

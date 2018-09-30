@@ -98,8 +98,8 @@ let appReducer = (action, state) =>
                   ...p,
                   comments: [
                     {
-                      id: "0", /* TODO: fix this? */
-                      created_time: "today", /* TODO: fix this? */
+                      id: Uuid.make(),
+                      created_time: Js.Date.make()->Js.Date.toISOString,
                       from: {
                         username: author,
                       },
