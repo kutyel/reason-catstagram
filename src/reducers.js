@@ -103,7 +103,7 @@ function appReducer(action, state) {
                                           /* user_has_liked */p[/* user_has_liked */5],
                                           /* comments : :: */[
                                             /* record */[
-                                              /* id */Curry._1(Uuid.make, /* () */0),
+                                              /* id */Uuid.make(/* () */0),
                                               /* from : record */[/* username */author],
                                               /* text */comment,
                                               /* created_time */new Date().toISOString()

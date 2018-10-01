@@ -28,7 +28,8 @@ function make(handleSubmit, _) {
                           className: "comment-form",
                           onSubmit: (function (e) {
                               e.preventDefault();
-                              return Curry._2(handleSubmit, author, comment);
+                              Curry._2(handleSubmit, author, comment);
+                              return Curry._1(send, /* ClearForm */0);
                             })
                         }, React.createElement("input", {
                               placeholder: "author",
@@ -57,7 +58,12 @@ function make(handleSubmit, _) {
             }),
           /* retainedProps */component[/* retainedProps */11],
           /* reducer */(function (action, state) {
-              if (action.tag) {
+              if (typeof action === "number") {
+                return /* Update */Block.__(0, [/* record */[
+                            /* author */"",
+                            /* comment */""
+                          ]]);
+              } else if (action.tag) {
                 return /* Update */Block.__(0, [/* record */[
                             /* author */state[/* author */0],
                             /* comment */action[0]

@@ -4,6 +4,7 @@ type state = {
 };
 
 type action =
+  | ClearForm
   | ChangeAuthor(string)
   | ChangeComment(string);
 
@@ -14,6 +15,7 @@ let make = (~handleSubmit, _children) => {
   initialState: () => {author: "", comment: ""},
   reducer: (action, state) =>
     switch (action) {
+    | ClearForm => ReasonReact.Update({author: "", comment: ""})
     | ChangeAuthor(author) => ReasonReact.Update({...state, author})
     | ChangeComment(comment) => ReasonReact.Update({...state, comment})
     },
@@ -24,7 +26,7 @@ let make = (~handleSubmit, _children) => {
         e => {
           ReactEvent.Form.preventDefault(e);
           handleSubmit(author, comment);
-          /* TODO: reset the form here :) */
+          send(ClearForm);
         }
       }>
       <input
