@@ -143,11 +143,10 @@ let appReducer = (action, state) =>
         ({state, send}) =>
           switch (state) {
           | Loaded(Detail(id), posts) =>
-            let post = posts->List.getBy(p => p.id === id);
-            switch (post) {
+            switch (posts->List.getBy(p => p.id === id)) {
             | Some({Post.comments: []}) => send(FetchComments(id))
             | _ => ()
-            };
+            }
           | _ => ()
           }
       ),

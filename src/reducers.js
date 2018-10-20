@@ -183,10 +183,10 @@ function appReducer(action, state) {
                           var match = state[0];
                           if (match) {
                             var id = match[0];
-                            var post = Belt_List.getBy(state[1], (function (p) {
+                            var match$1 = Belt_List.getBy(state[1], (function (p) {
                                     return p[/* id */0] === id;
                                   }));
-                            if (post !== undefined && !post[/* comments */6]) {
+                            if (match$1 !== undefined && !match$1[/* comments */6]) {
                               return Curry._1(param[/* send */3], /* FetchComments */Block.__(0, [id]));
                             } else {
                               return /* () */0;
