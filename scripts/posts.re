@@ -29,8 +29,18 @@ switch (token) {
     |> then_(NodeFetch.text)
     |> then_(txt => {
 				 /* write the fetched posts as text in "./posts.json" */
-				 Node.Fs.writeFileAsUtf8Sync("./posts.json", txt);
-				 Js.log("all posts written to ./posts.json!");
+				 switch (Node.Fs.writeFileAsUtf8Sync("./posts.json", txt)) {
+				 | _ => Js.log("all posts written to ./posts.json!")
+				 | exception (Js.Exn.Error(e)) =>
+					 switch (Js.Exn.message(e)) {
+					 | Some(message) =>
+						 Js.log({j|Error writing the posts to posts.json: $message|j})
+					 | None =>
+						 Js.log(
+							 "An unknown error occurred while writing the posts to posts.json",
+						 )
+					 }
+				 };
 				 resolve();
        })
     |> catch(_ =>

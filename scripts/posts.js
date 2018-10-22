@@ -2,6 +2,7 @@
 'use strict';
 
 var Fs = require("fs");
+var Js_exn = require("bs-platform/lib/js/js_exn.js");
 var NodeFetch = require("node-fetch");
 var Js_primitive = require("bs-platform/lib/js/js_primitive.js");
 
@@ -20,8 +21,29 @@ if (token == null) {
   NodeFetch.default(url).then((function (prim) {
               return prim.text();
             })).then((function (txt) {
-            Fs.writeFileSync("./posts.json", txt, "utf8");
-            console.log("all posts written to ./posts.json!");
+            var exit = 0;
+            var val;
+            try {
+              Fs.writeFileSync("./posts.json", txt, "utf8");
+              val = /* () */0;
+              exit = 1;
+            }
+            catch (raw_exn){
+              var exn = Js_exn.internalToOCamlException(raw_exn);
+              if (exn[0] === Js_exn.$$Error) {
+                var match = exn[1].message;
+                if (match !== undefined) {
+                  console.log("Error writing the posts to posts.json: " + (String(match) + ""));
+                } else {
+                  console.log("An unknown error occurred while writing the posts to posts.json");
+                }
+              } else {
+                throw exn;
+              }
+            }
+            if (exit === 1) {
+              console.log("all posts written to ./posts.json!");
+            }
             return Promise.resolve(/* () */0);
           })).catch((function () {
           return Promise.resolve((console.log("Something went wrong while fetching the posts from instagram"), /* () */0));
