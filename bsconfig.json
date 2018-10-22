@@ -3,6 +3,9 @@
   "sources": [
     {
       "dir": "src"
+    },
+    {
+      "dir": "scripts"
     }
   ],
   "bs-dependencies": [
