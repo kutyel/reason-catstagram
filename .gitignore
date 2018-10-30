@@ -31,3 +31,4 @@ yarn-error.log*
 
 .cache
 .bsb.lock
+package-lock.json
