@@ -7,9 +7,10 @@
     "@glennsl/bs-json": "^3.0.0",
     "bs-fetch": "^0.3.0",
     "node-fetch": "^2.2.0",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "reason-react": "^0.5.3"
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "reason-react": "^0.7.0",
+    "reason-react-update": "^0.1.1"
   },
   "scripts": {
     "bsb": "bsb -make-world -w",
@@ -18,9 +19,8 @@
     "start": "concurrently 'npm:bsb' 'npm:bundle' 'open http://localhost:1234'"
   },
   "devDependencies": {
-    "bs-platform": "^4.0.5",
+    "bs-platform": "^5.0.4",
     "concurrently": "^3.6.1",
-    "lodash": "^4.17.11",
-    "parcel-bundler": "^1.10.3"
+    "parcel-bundler": "^1.12.3"
   }
 }

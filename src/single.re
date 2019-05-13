@@ -1,14 +1,10 @@
-let component = ReasonReact.statelessComponent("Single");
-
-let make = (~posts, ~postId, ~send, ~navigate, _children) => {
-  ...component,
-  render: _self =>
-    switch (posts->List.getBy(({Types.Post.id}) => id == postId)) {
-    | None => <Error />
-    | Some(post) =>
-      <div className="single-photo">
-        <Post post send navigate />
-        <Comments postId send comments={post.comments} />
-      </div>
-    },
-};
+[@react.component]
+let make = (~posts, ~postId, ~dispatch, ~navigate) =>
+  switch (posts->List.getBy(({Types.Post.id}) => id == postId)) {
+  | None => <Error />
+  | Some(post) =>
+    <div className="single-photo">
+      <Post post dispatch navigate />
+      <Comments postId dispatch comments={post.comments} />
+    </div>
+  };

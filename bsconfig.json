@@ -8,18 +8,11 @@
       "dir": "scripts"
     }
   ],
-  "bs-dependencies": [
-    "reason-react",
-    "bs-fetch",
-    "@glennsl/bs-json"
-  ],
+  "bs-dependencies": ["reason-react-update", "reason-react", "bs-fetch", "@glennsl/bs-json"],
   "reason": {
-    "react-jsx": 2
+    "react-jsx": 3
   },
-  "bsc-flags": [
-    "-bs-super-errors",
-    "-open Belt"
-  ],
+  "bsc-flags": ["-bs-super-errors", "-open Belt"],
   "refmt": 3,
   "package-specs": {
     "module": "commonjs",

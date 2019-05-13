@@ -4,7 +4,7 @@ module Route = {
     | Detail(string);
 
   let urlToRoute = url =>
-    switch (ReasonReact.Router.(url.path)) {
+    switch (ReasonReactRouter.(url.path)) {
     | ["view", postId] => Detail(postId)
     | _ => Base
     };
