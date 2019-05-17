@@ -4,6 +4,7 @@
 var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
+var Belt_List = require("bs-platform/lib/js/belt_List.js");
 
 function Post(Props) {
   var post = Props.post;
@@ -12,6 +13,8 @@ function Post(Props) {
   var user_has_liked = post[/* user_has_liked */5];
   var id = post[/* id */0];
   var likes = String(post[/* likes */3][/* count */0]);
+  var length = Belt_List.length(post[/* comments */6]);
+  var match = length === 0;
   return React.createElement("figure", {
               className: "grid-figure"
             }, React.createElement("div", {
@@ -41,7 +44,7 @@ function Post(Props) {
                               className: "comment-count"
                             }, React.createElement("span", {
                                   className: "speech-bubble"
-                                }), String(post[/* num_comments */4][/* count */0]))))));
+                                }), String(match ? post[/* num_comments */4][/* count */0] : length))))));
 }
 
 var make = Post;

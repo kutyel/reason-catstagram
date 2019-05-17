@@ -8,9 +8,11 @@ let make = (~post, ~dispatch, ~navigate) => {
     likes: {count},
     user_has_liked,
     caption: {text},
+    comments,
     num_comments: {count: num_comments},
   } = post;
   let likes = string_of_int(count);
+  let length = List.length(comments);
   <figure className="grid-figure">
     <div className="grid-photo-wrap">
       <a href={j|/view/$id|j} onClick={navigate(Route.Detail(id))}>
@@ -31,7 +33,7 @@ let make = (~post, ~dispatch, ~navigate) => {
           onClick={navigate(Detail(id))}>
           <span className="comment-count">
             <span className="speech-bubble" />
-            {React.string(string_of_int(num_comments))}
+            {React.string(string_of_int(length == 0 ? num_comments : length))}
           </span>
         </a>
       </div>

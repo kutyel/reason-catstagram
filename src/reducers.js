@@ -18,17 +18,15 @@ function appReducer(action, state) {
                 /* Loading */1,
                 (function (param) {
                     var send = param[/* send */0];
-                    return (function (param) {
-                              fetch("https://api.instagram.com/v1/users/self/media/recent/?access_token=" + (String(token) + "")).then((function (prim) {
-                                          return prim.json();
-                                        })).then((function (json) {
-                                        var posts = Types.Post[/* decode */1](json);
-                                        return Promise.resolve(Curry._1(send, /* FetchedPosts */Block.__(1, [posts])));
-                                      })).catch((function (_e) {
-                                      return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
-                                    }));
-                              return /* () */0;
-                            });
+                    fetch("https://api.instagram.com/v1/users/self/media/recent/?access_token=" + (String(token) + "")).then((function (prim) {
+                                return prim.json();
+                              })).then((function (json) {
+                              var posts = Types.Post[/* decode */1](json);
+                              return Promise.resolve(Curry._1(send, /* FetchedPosts */Block.__(1, [posts])));
+                            })).catch((function (_e) {
+                            return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
+                          }));
+                    return undefined;
                   })
               ]);
     } else {
@@ -40,20 +38,18 @@ function appReducer(action, state) {
           var mediaId = action[0];
           return /* SideEffects */Block.__(2, [(function (param) {
                         var send = param[/* send */0];
-                        return (function (param) {
-                                  fetch("https://api.instagram.com/v1/media/" + (String(mediaId) + ("/comments?access_token=" + (String(token) + "")))).then((function (prim) {
-                                              return prim.json();
-                                            })).then((function (json) {
-                                            var comments = Types.$$Comment[/* decode */1](json);
-                                            return Promise.resolve(Curry._1(send, /* FetchedComments */Block.__(2, [
-                                                              mediaId,
-                                                              comments
-                                                            ])));
-                                          })).catch((function (_e) {
-                                          return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
-                                        }));
-                                  return /* () */0;
-                                });
+                        fetch("https://api.instagram.com/v1/media/" + (String(mediaId) + ("/comments?access_token=" + (String(token) + "")))).then((function (prim) {
+                                    return prim.json();
+                                  })).then((function (json) {
+                                  var comments = Types.$$Comment[/* decode */1](json);
+                                  return Promise.resolve(Curry._1(send, /* FetchedComments */Block.__(2, [
+                                                    mediaId,
+                                                    comments
+                                                  ])));
+                                })).catch((function (_e) {
+                                return Promise.resolve(Curry._1(send, /* FailedToFetch */1));
+                              }));
+                        return undefined;
                       })]);
       case 1 : 
           return /* Update */Block.__(0, [/* Loaded */[
@@ -181,27 +177,25 @@ function appReducer(action, state) {
                       ],
                     (function (param) {
                         var state = param[/* state */1];
-                        var send = param[/* send */0];
-                        return (function (param) {
-                                  if (typeof state === "number") {
-                                    return /* () */0;
-                                  } else {
-                                    var match = state[0];
-                                    if (match) {
-                                      var id = match[0];
-                                      var match$1 = Belt_List.getBy(state[1], (function (p) {
-                                              return p[/* id */0] === id;
-                                            }));
-                                      if (match$1 !== undefined && !match$1[/* comments */6]) {
-                                        return Curry._1(send, /* FetchComments */Block.__(0, [id]));
-                                      } else {
-                                        return /* () */0;
-                                      }
-                                    } else {
-                                      return /* () */0;
-                                    }
-                                  }
-                                });
+                        if (typeof state !== "number") {
+                          var match = state[0];
+                          if (match) {
+                            var id = match[0];
+                            var match$1 = Belt_List.getBy(state[1], (function (p) {
+                                    return p[/* id */0] === id;
+                                  }));
+                            if (match$1 !== undefined) {
+                              if (match$1[/* comments */6]) {
+                                
+                              } else {
+                                Curry._1(param[/* send */0], /* FetchComments */Block.__(0, [id]));
+                              }
+                            }
+                            
+                          }
+                          
+                        }
+                        return undefined;
                       })
                   ]);
       

@@ -8,45 +8,43 @@ let appReducer = (action, state) =>
   | FetchPosts =>
     UpdateWithSideEffects(
       Loading,
-      ({send}) =>
-        Some(
-          () =>
-            Js.Promise.(
-              Fetch.fetch(
-                {j|https://api.instagram.com/v1/users/self/media/recent/?access_token=$token|j},
-              )
-              |> then_(Fetch.Response.json)
-              |> then_(json =>
-                   json
-                   ->Post.decode
-                   ->(posts => send(FetchedPosts(posts)))
-                   ->resolve
-                 )
-              |> catch(_e => resolve(send(FailedToFetch)))
-              |> ignore
-            ),
-        ),
+      ({send}) => {
+        Js.Promise.(
+          Fetch.fetch(
+            {j|https://api.instagram.com/v1/users/self/media/recent/?access_token=$token|j},
+          )
+          |> then_(Fetch.Response.json)
+          |> then_(json =>
+               json
+               ->Post.decode
+               ->(posts => send(FetchedPosts(posts)))
+               ->resolve
+             )
+          |> catch(_e => resolve(send(FailedToFetch)))
+          |> ignore
+        );
+        None;
+      },
     )
   | FetchComments(mediaId) =>
     SideEffects(
-      ({send}) =>
-        Some(
-          () =>
-            Js.Promise.(
-              Fetch.fetch(
-                {j|https://api.instagram.com/v1/media/$mediaId/comments?access_token=$token|j},
-              )
-              |> then_(Fetch.Response.json)
-              |> then_(json =>
-                   json
-                   |> Comment.decode
-                   |> (comments => send(FetchedComments(mediaId, comments)))
-                   |> resolve
-                 )
-              |> catch(_e => resolve(send(FailedToFetch)))
-              |> ignore
-            ),
-        ),
+      ({send}) => {
+        Js.Promise.(
+          Fetch.fetch(
+            {j|https://api.instagram.com/v1/media/$mediaId/comments?access_token=$token|j},
+          )
+          |> then_(Fetch.Response.json)
+          |> then_(json =>
+               json
+               |> Comment.decode
+               |> (comments => send(FetchedComments(mediaId, comments)))
+               |> resolve
+             )
+          |> catch(_e => resolve(send(FailedToFetch)))
+          |> ignore
+        );
+        None;
+      },
     )
   | Like(post, like) =>
     Update(
@@ -140,17 +138,16 @@ let appReducer = (action, state) =>
       | Loaded(_, posts) => Loaded(route, posts)
       | _ => state
       },
-      ({state, send}) =>
-        Some(
-          () =>
-            switch (state) {
-            | Loaded(Detail(id), posts) =>
-              switch (posts->List.getBy(p => p.id === id)) {
-              | Some({Post.comments: []}) => send(FetchComments(id))
-              | _ => ()
-              }
-            | _ => ()
-            },
-        ),
+      ({state, send}) => {
+        switch (state) {
+        | Loaded(Detail(id), posts) =>
+          switch (posts->List.getBy(p => p.id == id)) {
+          | Some({Post.comments: []}) => send(FetchComments(id))
+          | _ => ()
+          }
+        | _ => ()
+        };
+        None;
+      },
     )
   };
