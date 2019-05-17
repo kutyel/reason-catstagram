@@ -140,17 +140,17 @@ let appReducer = (action, state) =>
       | Loaded(_, posts) => Loaded(route, posts)
       | _ => state
       },
-      ({state, send}) => {
-        let sideEffect = () =>
-          switch (state) {
-          | Loaded(Detail(id), posts) =>
-            switch (posts->List.getBy(p => p.id === id)) {
-            | Some({Post.comments: []}) => send(FetchComments(id))
+      ({state, send}) =>
+        Some(
+          () =>
+            switch (state) {
+            | Loaded(Detail(id), posts) =>
+              switch (posts->List.getBy(p => p.id === id)) {
+              | Some({Post.comments: []}) => send(FetchComments(id))
+              | _ => ()
+              }
             | _ => ()
-            }
-          | _ => ()
-          };
-        Some(sideEffect);
-      },
+            },
+        ),
     )
   };
